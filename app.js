@@ -14,12 +14,15 @@ const toast = $("toast");
 let running = false;
 let currentController = null;
 let toastTimeout = null;
-const ARC_LENGTH = 479.862;
 const AUX_DIAL_CONFIG = {
-  upload: { max: 300, unit: "Mbps" },
-  ping: { max: 300, unit: "ms" },
-  jitter: { max: 250, unit: "ms" },
+  upload: { max: 50, initialMax: 50, unit: "Mbps" },
+  ping: { max: 300, unit: "ms", reverse: true },
+  signal: { max: 100, unit: "Mbps" },
 };
+const UPLOAD_SCALES = [50, 100, 200, 300, 500, 1000];
+const SPEED_SCALES = [100, 200, 300, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000];
+let speedScale = 100;
+let browserDownlink = null;
 
 function polar(cx, cy, radius, angle) {
   const radians = (angle - 90) * Math.PI / 180;
@@ -30,9 +33,9 @@ function buildGauge() {
   for (let i = 0; i <= 40; i += 1) {
     const angle = -135 + (270 * i) / 40;
     const major = i % 5 === 0;
-    const redline = i >= 34;
-    const inner = polar(180, 218, major ? 120 : 125, angle);
-    const outer = polar(180, 218, major ? 133 : 130, angle);
+    const redline = i >= 35;
+    const inner = polar(180, 180, major ? 144 : 150, angle);
+    const outer = polar(180, 180, 157, angle);
     const tick = document.createElementNS("http://www.w3.org/2000/svg", "line");
     tick.setAttribute("x1", inner.x.toFixed(2));
     tick.setAttribute("y1", inner.y.toFixed(2));
@@ -42,16 +45,18 @@ function buildGauge() {
     tick.dataset.index = String(i);
     gaugeTicks.append(tick);
 
-    if (i % 8 === 0) {
-      const position = polar(180, 218, 119, angle);
+    if (i % 10 === 0) {
+      const position = polar(180, 180, 130, angle);
       const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
       label.setAttribute("x", position.x.toFixed(2));
       label.setAttribute("y", position.y.toFixed(2));
       label.setAttribute("class", `gauge-number${redline ? " red" : ""}`);
-      label.textContent = String(Math.round((i / 40) * 500));
+      label.dataset.index = String(i);
+      label.textContent = String(Math.round((i / 40) * speedScale));
       gaugeLabels.append(label);
     }
   }
+  updateSpeedScale(0);
 }
 
 function buildAuxGauges() {
@@ -82,19 +87,71 @@ function buildAuxGauges() {
         label.setAttribute("x", point.x.toFixed(2));
         label.setAttribute("y", point.y.toFixed(2));
         label.setAttribute("class", `dial-label${redline ? " red" : ""}`);
-        label.textContent = String(Math.round((index / 36) * config.max));
+        label.dataset.index = String(index);
         labels.append(label);
       }
     }
+    updateAuxScale(dial.dataset.gauge, config.max);
   });
+}
+
+function updateSpeedScale(speed) {
+  const scale = getAdaptiveScale(speedScale, speed, SPEED_SCALES, 10000);
+  if (speedScale === scale) return;
+  speedScale = scale;
+  gaugeLabels.querySelectorAll(".gauge-number").forEach((label) => {
+    label.textContent = String(Math.round((Number(label.dataset.index) / 40) * speedScale));
+  });
+  if (typeof gaugeLabels.animate === "function") {
+    gaugeLabels.animate([{ opacity: 0.45 }, { opacity: 1 }], { duration: 260, easing: "ease-out" });
+  }
+  $("gauge").setAttribute("aria-label", `Download speedometer, scale 0 to ${speedScale} megabits per second`);
+}
+
+function getAdaptiveScale(currentScale, value, scales, overflowStep) {
+  let scale = currentScale;
+  if (value > scale) {
+    scale = scales.find((limit) => limit > scale && value <= limit) || Math.ceil(value / overflowStep) * overflowStep;
+  }
+  while (scale > scales[0]) {
+    const index = scales.indexOf(scale);
+    const previousScale = index > 0 ? scales[index - 1] : scales[scales.length - 1];
+    if (value >= previousScale * 0.85) break;
+    scale = previousScale;
+  }
+  return scale;
+}
+
+function updateAuxScale(name, scale) {
+  const dial = document.querySelector(`.aux-gauge[data-gauge="${name}"]`);
+  const config = AUX_DIAL_CONFIG[name];
+  if (!dial || !config) return;
+  config.max = scale;
+  dial.querySelectorAll(".dial-label").forEach((label) => {
+    const index = Number(label.dataset.index);
+    if ((name === "ping" || name === "signal") && (index === 0 || index === 36)) {
+      label.textContent = name === "ping" ? (index === 0 ? "E" : "F") : (index === 0 ? "C" : "H");
+      return;
+    }
+    const reading = name === "ping" ? scale * (1 - index / 36) : scale * index / 36;
+    label.textContent = String(Math.round(reading));
+  });
+  if (typeof dial.querySelector(".dial-label")?.animate === "function") {
+    dial.querySelector(".dial-labels").animate([{ opacity: 0.45 }, { opacity: 1 }], { duration: 240, easing: "ease-out" });
+  }
 }
 
 function setAuxGauge(name, value) {
   const config = AUX_DIAL_CONFIG[name];
   const dial = document.querySelector(`.aux-gauge[data-gauge="${name}"]`);
   if (!dial || !config) return;
+  if (name === "upload" && Number.isFinite(value)) {
+    const scale = getAdaptiveScale(config.max, value, UPLOAD_SCALES, 1000);
+    if (config.max !== scale) updateAuxScale(name, scale);
+  }
   const hasValue = Number.isFinite(value);
-  const ratio = hasValue ? Math.max(0, Math.min(value / config.max, 1)) : 0;
+  const valueRatio = hasValue ? Math.max(0, Math.min(value / config.max, 1)) : 0;
+  const ratio = hasValue && config.reverse ? 1 - valueRatio : valueRatio;
   const angle = -135 + ratio * 270;
   dial.querySelector(".dial-needle").style.transform = `rotate(${angle}deg)`;
   dial.querySelectorAll(".dial-tick").forEach((tick) => {
@@ -104,11 +161,11 @@ function setAuxGauge(name, value) {
 }
 
 function setGauge(speed, phase) {
-  const capped = Math.max(0, Math.min(speed, 500));
-  const ratio = capped / 500;
+  updateSpeedScale(speed);
+  const ratio = Math.max(0, Math.min(speed / speedScale, 1));
   const angle = -135 + ratio * 270;
   needle.style.transform = `rotate(${angle}deg)`;
-  progressArc.style.strokeDashoffset = String(ARC_LENGTH * (1 - ratio));
+  progressArc.style.strokeDashoffset = String(1000 * (1 - ratio));
   const litTicks = Math.round(ratio * 40);
   gaugeTicks.querySelectorAll(".tick").forEach((tick) => {
     tick.classList.toggle("active", Number(tick.dataset.index) <= litTicks);
@@ -132,6 +189,18 @@ function formatReading(value) {
   return value >= 100 ? value.toFixed(0) : value >= 10 ? value.toFixed(1) : value.toFixed(2);
 }
 
+function setJitter(value) {
+  $("jitter-result").innerHTML = `${Number.isFinite(value) ? formatLatency(value) : "—"}<small> ms</small>`;
+}
+
+function setSignalEstimate(value, source) {
+  setAuxGauge("signal", value);
+  $("signal-source").textContent = source;
+}
+
+function resetSignalEstimate() {
+  setSignalEstimate(browserDownlink, browserDownlink === null ? "LIVE DOWNLOAD ESTIMATE" : "BROWSER LINK ESTIMATE");
+}
 function setPhase(phase, label) {
   $("phase-label").textContent = label;
   $("phase-dot").classList.toggle("busy", running);
@@ -274,18 +343,16 @@ async function measurePing(signal) {
     await response.arrayBuffer();
     samples.push(performance.now() - started);
     const average = samples.reduce((sum, sample) => sum + sample, 0) / samples.length;
-    $("ping-result").innerHTML = `${formatLatency(average)}<span> ms</span>`;
+    setAuxGauge("ping", average);
     if (samples.length > 1) {
       const variation = samples.slice(1).reduce((sum, sample, i) => sum + Math.abs(sample - samples[i]), 0) / (samples.length - 1);
-      $("jitter-result").innerHTML = `${formatLatency(variation)}<span> ms</span>`;
-      setAuxGauge("jitter", variation);
+      setJitter(variation);
     }
-    setAuxGauge("ping", average);
   }
   const ping = samples.reduce((sum, sample) => sum + sample, 0) / samples.length;
   const jitter = samples.slice(1).reduce((sum, sample, index) => sum + Math.abs(sample - samples[index]), 0) / (samples.length - 1);
   setAuxGauge("ping", ping);
-  setAuxGauge("jitter", jitter);
+  setJitter(jitter);
   return { ping, jitter };
 }
 
@@ -301,6 +368,7 @@ async function runDownload(signal) {
       {},
       (liveSpeed) => {
         setGauge(liveSpeed, "download");
+        setSignalEstimate(liveSpeed, "LIVE DOWNLOAD · Mbps");
       },
       signal,
     );
@@ -314,8 +382,8 @@ async function runDownload(signal) {
 
 async function runUpload(signal) {
   setPhase("upload", "MEASURING UPLOAD");
-  $("readout-label").textContent = "UPLOAD";
-  $("readout-caption").textContent = "SENDING LIVE DATA";
+  $("readout-label").textContent = "DOWNLOAD";
+  $("readout-caption").textContent = "UPLOAD ON RPM DIAL";
   let totalBytes = 0;
   let totalSeconds = 0;
   setAuxGauge("upload", null);
@@ -328,7 +396,6 @@ async function runUpload(signal) {
       `${ENDPOINT}/__up?cacheBust=${Date.now()}-${index}`,
       payload,
       (liveSpeed) => {
-        setGauge(liveSpeed, "upload");
         setAuxGauge("upload", liveSpeed);
       },
       signal,
@@ -338,7 +405,6 @@ async function runUpload(signal) {
   }
   const speed = (totalBytes * 8) / totalSeconds / 1_000_000;
   setAuxGauge("upload", speed);
-  setGauge(speed, "upload");
   return speed;
 }
 
@@ -351,9 +417,11 @@ async function runTest() {
   buttonLabel.textContent = "TESTING…";
   $("readout-caption").textContent = "INITIALIZING TEST";
   $("engine-note").textContent = "REAL TRANSFER · CLOUDFLARE SPEED TEST";
+  updateAuxScale("upload", AUX_DIAL_CONFIG.upload.initialMax);
   setAuxGauge("upload", null);
   setAuxGauge("ping", null);
-  setAuxGauge("jitter", null);
+  setSignalEstimate(null, "AWAITING DOWNLOAD");
+  setJitter(null);
   setGauge(0, "download");
   $("speed-value").innerHTML = `—<span> Mbps</span>`;
   try {
@@ -398,6 +466,13 @@ async function runTest() {
 }
 
 async function loadNetworkInfo() {
+  const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+  const updateBrowserDownlink = () => {
+    browserDownlink = Number.isFinite(connection?.downlink) ? connection.downlink : null;
+    if (!running) resetSignalEstimate();
+  };
+  updateBrowserDownlink();
+  connection?.addEventListener?.("change", updateBrowserDownlink);
   try {
     const response = await fetch(`${ENDPOINT}/meta`, { cache: "no-store" });
     if (!response.ok) throw new Error(`Network metadata request returned HTTP ${response.status}.`);
@@ -427,9 +502,11 @@ function resetTest() {
   $("readout-label").textContent = "DOWNLOAD";
   $("readout-caption").textContent = "PRESS START TO BEGIN";
   $("engine-note").textContent = "REAL TRANSFER · CLOUDFLARE SPEED TEST";
+  updateAuxScale("upload", AUX_DIAL_CONFIG.upload.initialMax);
   setAuxGauge("upload", null);
   setAuxGauge("ping", null);
-  setAuxGauge("jitter", null);
+  setSignalEstimate(null, "AWAITING DOWNLOAD");
+  setJitter(null);
   setGauge(0, "download");
   $("speed-value").innerHTML = `—<span> Mbps</span>`;
   setPhase("ready", "READY FOR IGNITION");

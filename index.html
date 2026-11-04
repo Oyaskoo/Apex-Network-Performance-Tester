@@ -39,10 +39,10 @@
             <div class="server-chip"><span class="tiny-crosshair">⌖</span><span id="server-short">CLOUDFLARE NETWORK</span></div>
           </div>
 
-          <div class="instrument-cluster">
+          <div class="instrument-cluster" aria-label="Four live automotive-style network gauges">
           <div class="gauge-wrap">
             <div class="gauge-halo" aria-hidden="true"></div>
-            <svg id="gauge" class="gauge" viewBox="0 0 360 270" role="img" aria-label="Speedometer gauge">
+            <svg id="gauge" class="gauge" viewBox="0 0 360 360" role="img" aria-label="Download speedometer, scale 0 to 100 megabits per second">
               <defs>
                 <linearGradient id="arcGradient" x1="0" y1="0" x2="1" y2="1">
                   <stop offset="0%" stop-color="#f0f3ef" stop-opacity=".85"/>
@@ -54,13 +54,17 @@
                   <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
                 </filter>
               </defs>
-              <path class="gauge-track" d="M 52 224 A 132 132 0 1 1 308 224"/>
-              <path class="gauge-progress" id="gauge-progress" d="M 52 224 A 132 132 0 1 1 308 224"/>
+              <circle class="gauge-case" cx="180" cy="180" r="176"/>
+              <circle class="gauge-bezel" cx="180" cy="180" r="168"/>
+              <circle class="gauge-face" cx="180" cy="180" r="158"/>
+              <path class="gauge-track" d="M 68.53 291.47 A 157.64 157.64 0 1 1 291.47 291.47"/>
+              <path class="gauge-progress" id="gauge-progress" pathLength="1000" d="M 68.53 291.47 A 157.64 157.64 0 1 1 291.47 291.47"/>
               <g id="gauge-ticks"></g>
               <g id="gauge-labels"></g>
-              <path id="needle" class="needle" d="M 176.8 222 L 180 72 L 183.2 222 Z" />
-              <circle class="needle-hub-outer" cx="180" cy="218" r="13"/>
-              <circle class="needle-hub" cx="180" cy="218" r="6"/>
+              <path id="needle" class="needle" d="M 175 185 L 180 55 L 185 185 Z" />
+              <circle class="needle-hub-shadow" cx="180" cy="180" r="14"/>
+              <circle class="needle-hub-outer" cx="180" cy="180" r="11"/>
+              <circle class="needle-hub" cx="180" cy="180" r="6"/>
             </svg>
             <div class="readout">
               <div class="readout-kicker" id="readout-label">DOWNLOAD</div>
@@ -68,53 +72,55 @@
               <div class="readout-caption" id="readout-caption">PRESS START TO BEGIN</div>
             </div>
           </div>
-          <div class="aux-gauges" aria-label="Additional network gauges">
-            <article class="aux-gauge" data-gauge="upload">
-              <div class="aux-heading"><span>02 — RPM</span><span>SEND</span></div>
-              <svg class="aux-dial" viewBox="0 0 160 160" role="img" aria-label="Upload speed RPM-inspired gauge">
-                <circle class="dial-case" cx="80" cy="80" r="77"/>
-                <circle class="dial-bezel" cx="80" cy="80" r="72"/>
-                <circle class="dial-face" cx="80" cy="80" r="67"/>
-                <path class="dial-track" d="M 34.75 125.25 A 64 64 0 1 1 125.25 125.25"/>
-                <g class="dial-ticks"></g><g class="dial-labels"></g>
-                <path class="dial-needle" d="M 77.5 84 L 80 29 L 82.5 84 Z"/>
-                <circle class="dial-hub-ring" cx="80" cy="80" r="8"/>
-                <circle class="dial-hub" cx="80" cy="80" r="3.5"/>
-              </svg>
-              <div class="aux-value" id="upload-result">—<span> Mbps</span></div>
-              <div class="aux-foot">UPLOAD THROUGHPUT</div>
-            </article>
-            <article class="aux-gauge fuel-gauge" data-gauge="ping">
-              <div class="aux-heading"><span>03 — FUEL</span><span>LOW IS BETTER</span></div>
-              <svg class="aux-dial" viewBox="0 0 160 160" role="img" aria-label="Ping latency fuel-style gauge">
-                <circle class="dial-case" cx="80" cy="80" r="77"/>
-                <circle class="dial-bezel" cx="80" cy="80" r="72"/>
-                <circle class="dial-face" cx="80" cy="80" r="67"/>
-                <path class="dial-track" d="M 34.75 125.25 A 64 64 0 1 1 125.25 125.25"/>
-                <g class="dial-ticks"></g><g class="dial-labels"></g>
-                <path class="dial-needle" d="M 77.5 84 L 80 29 L 82.5 84 Z"/>
-                <circle class="dial-hub-ring" cx="80" cy="80" r="8"/>
-                <circle class="dial-hub" cx="80" cy="80" r="3.5"/>
-              </svg>
-              <div class="aux-value" id="ping-result">—<span> ms</span></div>
-              <div class="aux-foot">ROUND-TRIP TIME</div>
-            </article>
-            <article class="aux-gauge temp-gauge" data-gauge="jitter">
-              <div class="aux-heading"><span>04 — TEMP</span><span>STABILITY</span></div>
-              <svg class="aux-dial" viewBox="0 0 160 160" role="img" aria-label="Jitter stability temperature-style gauge">
-                <circle class="dial-case" cx="80" cy="80" r="77"/>
-                <circle class="dial-bezel" cx="80" cy="80" r="72"/>
-                <circle class="dial-face" cx="80" cy="80" r="67"/>
-                <path class="dial-track" d="M 34.75 125.25 A 64 64 0 1 1 125.25 125.25"/>
-                <g class="dial-ticks"></g><g class="dial-labels"></g>
-                <path class="dial-needle" d="M 77.5 84 L 80 29 L 82.5 84 Z"/>
-                <circle class="dial-hub-ring" cx="80" cy="80" r="8"/>
-                <circle class="dial-hub" cx="80" cy="80" r="3.5"/>
-              </svg>
-              <div class="aux-value" id="jitter-result">—<span> ms</span></div>
-              <div class="aux-foot">PING VARIATION</div>
-            </article>
+          <div class="aux-gauge rpm-gauge" data-gauge="upload">
+            <div class="aux-heading"><span>02 — RPM</span><span>SEND</span></div>
+            <svg class="aux-dial" viewBox="0 0 160 160" role="img" aria-label="Upload speed tachometer">
+              <circle class="dial-case" cx="80" cy="80" r="77"/>
+              <circle class="dial-bezel" cx="80" cy="80" r="72"/>
+              <circle class="dial-face" cx="80" cy="80" r="67"/>
+              <path class="dial-track" d="M 34.75 125.25 A 64 64 0 1 1 125.25 125.25"/>
+              <g class="dial-ticks"></g><g class="dial-labels"></g>
+              <path class="dial-needle" d="M 77.5 84 L 80 29 L 82.5 84 Z"/>
+              <circle class="dial-hub-shadow" cx="80" cy="80" r="8"/>
+              <circle class="dial-hub-ring" cx="80" cy="80" r="6"/>
+              <circle class="dial-hub" cx="80" cy="80" r="3"/>
+            </svg>
+            <div class="aux-value" id="upload-result">—<span> Mbps</span></div>
+            <div class="aux-foot">UPLOAD THROUGHPUT</div>
           </div>
+          <div class="aux-gauge fuel-gauge" data-gauge="ping">
+            <div class="aux-heading"><span>03 — FUEL</span><span>E POOR · F GOOD</span></div>
+            <svg class="aux-dial" viewBox="0 0 160 160" role="img" aria-label="Ping latency fuel gauge, E is poor and F is excellent">
+              <circle class="dial-case" cx="80" cy="80" r="77"/>
+              <circle class="dial-bezel" cx="80" cy="80" r="72"/>
+              <circle class="dial-face" cx="80" cy="80" r="67"/>
+              <path class="dial-track" d="M 34.75 125.25 A 64 64 0 1 1 125.25 125.25"/>
+              <g class="dial-ticks"></g><g class="dial-labels"></g>
+              <path class="dial-needle" d="M 77.5 84 L 80 29 L 82.5 84 Z"/>
+              <circle class="dial-hub-shadow" cx="80" cy="80" r="8"/>
+              <circle class="dial-hub-ring" cx="80" cy="80" r="6"/>
+              <circle class="dial-hub" cx="80" cy="80" r="3"/>
+            </svg>
+            <div class="aux-value" id="ping-result">—<span> ms</span></div>
+            <div class="aux-foot">ROUND-TRIP TIME</div>
+          </div>
+          <div class="aux-gauge temp-gauge" data-gauge="signal">
+            <div class="aux-heading"><span>04 — TEMP</span><span>C WEAK · H STRONG</span></div>
+            <svg class="aux-dial" viewBox="0 0 160 160" role="img" aria-label="Network link estimate, C is weak and H is strong">
+              <circle class="dial-case" cx="80" cy="80" r="77"/>
+              <circle class="dial-bezel" cx="80" cy="80" r="72"/>
+              <circle class="dial-face" cx="80" cy="80" r="67"/>
+              <path class="dial-track" d="M 34.75 125.25 A 64 64 0 1 1 125.25 125.25"/>
+              <g class="dial-ticks"></g><g class="dial-labels"></g>
+              <path class="dial-needle" d="M 77.5 84 L 80 29 L 82.5 84 Z"/>
+              <circle class="dial-hub-shadow" cx="80" cy="80" r="8"/>
+              <circle class="dial-hub-ring" cx="80" cy="80" r="6"/>
+              <circle class="dial-hub" cx="80" cy="80" r="3"/>
+            </svg>
+            <div class="aux-value" id="signal-result">—<span> Mbps</span></div>
+            <div class="aux-foot" id="signal-source">DOWNLOAD LINK ESTIMATE</div>
+          </div>
+          <div class="jitter-readout"><span>NETWORK JITTER</span><strong id="jitter-result">—<small> ms</small></strong></div>
           </div>
 
           <div class="phase-progress" aria-label="Test progress">

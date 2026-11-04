@@ -56,34 +56,42 @@ h1 em { color: var(--green); font-style: normal; }
 .state-dot { width: 5px; height: 5px; }
 .server-chip { padding: 7px 9px; border: 1px solid rgba(212,228,215,.08); color: #79867d; letter-spacing: .1em; }
 .tiny-crosshair { color: var(--green); font-size: 13px; }
-.instrument-cluster { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(180px, 1fr); align-items: center; gap: 7px; margin: 7px -10px 0; }
-.gauge-wrap { position: relative; width: min(100%, 430px); aspect-ratio: 430 / 282; height: auto; margin: 0 auto; }
-.gauge-halo { position: absolute; width: 65%; height: 36%; left: 17.5%; bottom: 0; border-radius: 50%; background: rgba(110,174,88,.08); filter: blur(34px); }
+.instrument-cluster { display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(0, .88fr); grid-template-areas: "speed rpm" "fuel temp" "jitter jitter"; align-items: center; justify-items: center; gap: 2px 6px; margin: 9px -10px 0; }
+.gauge-wrap { grid-area: speed; position: relative; width: min(100%, 260px); aspect-ratio: 1; height: auto; margin: 0 auto; }
+.gauge-halo { position: absolute; width: 65%; height: 36%; left: 17.5%; bottom: 9%; border-radius: 50%; background: rgba(110,174,88,.08); filter: blur(34px); }
 .gauge { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
 .gauge-track, .gauge-progress { fill: none; stroke-linecap: round; }
-.gauge-track { stroke: rgba(213,228,217,.075); stroke-width: 2; }
-.gauge-progress { stroke: url(#arcGradient); stroke-width: 2; stroke-dasharray: 479.862; stroke-dashoffset: 479.862; transition: stroke-dashoffset .2s ease-out; filter: drop-shadow(0 0 5px rgba(180,237,100,.33)); }
+.gauge-case { fill: #070908; stroke: #545a55; stroke-width: 3; filter: drop-shadow(0 5px 9px rgba(0,0,0,.8)); }
+.gauge-bezel { fill: #141816; stroke: #252b26; stroke-width: 10; }
+.gauge-face { fill: #0a0c0b; stroke: #030504; stroke-width: 2; }
+.gauge-track { stroke: rgba(213,228,217,.075); stroke-width: 1.8; }
+.gauge-progress { stroke: url(#arcGradient); stroke-width: 1.8; stroke-dasharray: 1000; stroke-dashoffset: 1000; transition: stroke-dashoffset .24s ease-out; filter: drop-shadow(0 0 5px rgba(180,237,100,.33)); }
 .tick { stroke: rgba(204,219,207,.32); stroke-width: 1; }
 .tick.major { stroke: #c4d2c8; stroke-width: 1.4; }
 .tick.redline { stroke: var(--red); }
 .tick.active { stroke: var(--green); filter: drop-shadow(0 0 4px var(--green)); }
+.tick.redline.active { stroke: var(--red); filter: drop-shadow(0 0 4px rgba(239,75,64,.8)); }
 .gauge-number { fill: #8e9b91; font: 600 10px "Space Grotesk", sans-serif; text-anchor: middle; dominant-baseline: middle; }
 .gauge-number.red { fill: #c56860; }
-.needle { fill: var(--red); stroke: rgba(255,135,120,.7); stroke-width: .8; stroke-linejoin: round; transform-origin: 180px 218px; transform: rotate(-135deg); transition: transform .42s cubic-bezier(.15,.73,.28,1); filter: url(#needleGlow); }
-.needle-hub-outer { fill: #202821; stroke: #70816f; stroke-width: 1; }
-.needle-hub { fill: var(--green); filter: drop-shadow(0 0 7px rgba(180,237,100,.8)); }
-.readout { position: absolute; top: 44%; left: 0; width: 100%; text-align: center; pointer-events: none; }
-.readout-kicker { color: #94a097; font: 600 9px Inter,sans-serif; letter-spacing: .24em; }
-.readout-number { margin: 4px 0 0; color: #f2f5ef; font: 600 clamp(38px, 5.2vw, 52px)/1 "Barlow Condensed",sans-serif; letter-spacing: -.035em; text-shadow: 0 0 24px rgba(190,222,193,.08); font-variant-numeric: tabular-nums; }
-.readout-number span { color: #8c9890; font: 500 12px Inter,sans-serif; letter-spacing: .06em; }
-.readout-caption { margin-top: 10px; color: #78857b; font: 600 8px Inter,sans-serif; letter-spacing: .16em; }
-.aux-gauges { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px 8px; align-content: center; }
+.needle { fill: var(--red); stroke: rgba(255,135,120,.7); stroke-width: .8; stroke-linejoin: round; transform-box: view-box; transform-origin: 180px 180px; transform: rotate(-135deg); transition: transform .42s cubic-bezier(.15,.73,.28,1); filter: url(#needleGlow); }
+.needle-hub-shadow { fill: rgba(0,0,0,.72); }
+.needle-hub-outer { fill: #252b26; stroke: #929990; stroke-width: 1.2; }
+.needle-hub { fill: #c4ccc6; stroke: #404842; stroke-width: 1; filter: drop-shadow(0 0 4px rgba(220,230,220,.45)); }
+.readout { position: absolute; top: 68%; left: 0; width: 100%; text-align: center; pointer-events: none; }
+.readout-kicker { color: #94a097; font: 600 8px Inter,sans-serif; letter-spacing: .2em; }
+.readout-number { margin: 2px 0 0; color: #f2f5ef; font: 600 clamp(26px, 3.2vw, 38px)/1 "Barlow Condensed",sans-serif; letter-spacing: -.035em; text-shadow: 0 0 24px rgba(190,222,193,.08); font-variant-numeric: tabular-nums; }
+.readout-number span { color: #8c9890; font: 500 9px Inter,sans-serif; letter-spacing: .04em; }
+.readout-caption { margin-top: 4px; color: #78857b; font: 600 6px Inter,sans-serif; letter-spacing: .12em; }
 .aux-gauge { --dial-accent: #ef463d; --dial-glow: rgba(239,70,61,.38); min-width: 0; padding: 3px 4px 5px; text-align: center; }
+.rpm-gauge { grid-area: rpm; width: min(100%, 210px); }
 .fuel-gauge { --dial-accent: #e8473f; --dial-glow: rgba(232,71,63,.32); }
 .temp-gauge { --dial-accent: #46cfe2; --dial-glow: rgba(70,207,226,.34); }
+.fuel-gauge { grid-area: fuel; width: min(100%, 150px); }
+.temp-gauge { grid-area: temp; width: min(100%, 150px); }
 .aux-heading { display: flex; justify-content: space-between; gap: 3px; margin: 0 2px -2px; color: #c4cdc5; font: 700 7px Inter,sans-serif; letter-spacing: .08em; white-space: nowrap; }
 .aux-heading span:last-child { color: #657269; font-size: 6px; }
-.aux-dial { display: block; width: min(100%, 124px); height: auto; margin: 0 auto; overflow: visible; }
+.aux-dial { display: block; width: min(100%, 205px); height: auto; margin: 0 auto; overflow: visible; }
+.fuel-gauge .aux-dial, .temp-gauge .aux-dial { width: min(100%, 140px); }
 .dial-case { fill: #090b0a; stroke: #555b56; stroke-width: 2; filter: drop-shadow(0 2px 3px rgba(0,0,0,.8)); }
 .dial-bezel { fill: #111512; stroke: #242a25; stroke-width: 5; }
 .dial-face { fill: #0b0e0c; stroke: #050706; stroke-width: 1.5; }
@@ -94,12 +102,16 @@ h1 em { color: var(--green); font-style: normal; }
 .dial-tick.active { stroke: var(--dial-accent); filter: drop-shadow(0 0 2px var(--dial-glow)); }
 .dial-label { fill: #a4aea6; font: 600 6px "Space Grotesk",sans-serif; text-anchor: middle; dominant-baseline: middle; }
 .dial-label.red { fill: var(--dial-accent); }
-.dial-needle { fill: var(--dial-accent); stroke: rgba(255,255,255,.55); stroke-width: .4; filter: drop-shadow(0 0 2px var(--dial-glow)); transform: rotate(-135deg); transform-box: view-box; transform-origin: 50% 50%; transition: transform .42s cubic-bezier(.15,.73,.28,1); }
-.dial-hub-ring { fill: #252a26; stroke: #879087; stroke-width: .8; }
+.dial-needle { fill: #f04b42; stroke: rgba(255,200,190,.72); stroke-width: .45; stroke-linejoin: round; filter: drop-shadow(0 0 2px var(--dial-glow)); transform: rotate(-135deg); transform-box: view-box; transform-origin: 80px 80px; transition: transform .42s cubic-bezier(.15,.73,.28,1); }
+.dial-hub-shadow { fill: rgba(0,0,0,.7); }
+.dial-hub-ring { fill: #252a26; stroke: #a2aaa3; stroke-width: .9; }
 .dial-hub { fill: #e7ece7; }
-.aux-value { margin-top: -6px; color: #edf2ed; font: 600 18px/1 "Barlow Condensed",sans-serif; font-variant-numeric: tabular-nums; }
+.aux-value { margin-top: -7px; color: #edf2ed; font: 600 17px/1 "Barlow Condensed",sans-serif; font-variant-numeric: tabular-nums; }
 .aux-value span { color: #89958b; font: 500 8px Inter,sans-serif; }
 .aux-foot { margin-top: 3px; color: #68746c; font: 600 6px Inter,sans-serif; letter-spacing: .1em; }
+.jitter-readout { grid-area: jitter; width: 100%; display: flex; justify-content: center; align-items: center; gap: 8px; min-height: 20px; border-top: 1px solid rgba(215,229,219,.07); color: #728078; font: 600 7px Inter,sans-serif; letter-spacing: .12em; }
+.jitter-readout strong { color: #dce5dc; font: 600 12px "Barlow Condensed",sans-serif; letter-spacing: 0; }
+.jitter-readout small { color: #89958b; font: 500 7px Inter,sans-serif; }
 .phase-progress { width: min(330px, 95%); display: flex; margin: 0 auto 17px; align-items: center; justify-content: center; color: #68746c; font: 600 8px Inter,sans-serif; letter-spacing: .13em; }
 .phase-step { display: flex; gap: 6px; align-items: center; white-space: nowrap; transition: color .2s ease; }
 .phase-step.active { color: var(--green); }
@@ -158,7 +170,10 @@ h3 { margin: 0; color: #d4ddd5; font: 600 11px "Space Grotesk",sans-serif; }
   h1 { max-width: none; margin-bottom: 12px; font-size: 47px; }
   .intro-copy { max-width: 480px; margin: 0 auto; }
   .cockpit { width: min(100%, 580px); margin: 0 auto; }
-  .instrument-cluster { grid-template-columns: minmax(0, 1.4fr) minmax(165px, 1fr); }
+  .instrument-cluster { grid-template-columns: minmax(0, 1.12fr) minmax(0, .88fr); }
+  .gauge-wrap { width: min(100%, 240px); }
+  .rpm-gauge { width: min(100%, 190px); }
+  .fuel-gauge, .temp-gauge { width: min(100%, 138px); }
   .aux-heading { font-size: 6px; }
 }
 @media (max-width: 520px) {
@@ -173,15 +188,19 @@ h3 { margin: 0; color: #d4ddd5; font: 600 11px "Space Grotesk",sans-serif; }
   .cockpit { padding: 13px 13px 17px; }
   .cockpit-top { font-size: 7px; }
   .server-chip { padding: 6px; gap: 5px; }
-  .instrument-cluster { grid-template-columns: 1fr; gap: 4px; margin: 5px 0 0; }
-  .gauge-wrap { width: min(100%, 380px); }
-  .aux-gauges { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px 11px; }
+  .instrument-cluster { grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr); gap: 2px 4px; margin: 5px -5px 0; }
+  .gauge-wrap { width: min(100%, 210px); }
+  .rpm-gauge { width: min(100%, 160px); }
+  .fuel-gauge, .temp-gauge { width: min(100%, 124px); }
   .aux-gauge { padding: 4px 6px 6px; }
-  .aux-dial { width: min(100%, 134px); }
-  .aux-heading { font-size: 7px; }
-  .aux-heading span:last-child { font-size: 6px; }
-  .readout-number { font-size: 43px; }
-  .readout-caption { margin-top: 7px; font-size: 7px; }
+  .aux-dial { width: min(100%, 160px); }
+  .fuel-gauge .aux-dial, .temp-gauge .aux-dial { width: min(100%, 124px); }
+  .aux-heading { font-size: 6px; }
+  .aux-heading span:last-child { font-size: 5px; }
+  .readout { top: 68%; }
+  .readout-kicker { font-size: 6px; }
+  .readout-number { font-size: clamp(16px, 5.5vw, 22px); }
+  .readout-caption { margin-top: 2px; font-size: 4px; }
   .phase-progress { margin-bottom: 14px; font-size: 7px; letter-spacing: .08em; }
   .step-rail { margin: 0 5px; min-width: 8px; }
   .phase-step { gap: 4px; }
