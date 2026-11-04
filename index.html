@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#090c0b">
+    <meta name="description" content="Measure your real internet download, upload, ping and jitter from a performance-inspired dashboard.">
+    <title>APEX — Network Performance</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <div class="ambient ambient-one" aria-hidden="true"></div>
+    <div class="ambient ambient-two" aria-hidden="true"></div>
+    <main class="shell">
+      <header class="topbar">
+        <a class="brand" href="#" aria-label="Apex home">
+          <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span>APEX<span class="brand-sub"> / NETWORK PERFORMANCE</span></span>
+        </a>
+        <div class="live-status"><span class="status-light"></span><span id="header-status">SYSTEM READY</span></div>
+      </header>
+
+      <section class="hero">
+        <div class="intro">
+          <p class="eyebrow"><span class="eyebrow-line"></span> CONNECTION DIAGNOSTICS</p>
+          <h1>Feel the <em>speed.</em></h1>
+          <p class="intro-copy">A real-time read on your connection. No estimates, no simulated numbers — just your network at full throttle.</p>
+        </div>
+
+        <section class="cockpit" aria-label="Live speed test">
+          <div class="cockpit-top">
+            <div class="test-state">
+              <span class="state-dot" id="phase-dot"></span>
+              <span id="phase-label">READY FOR IGNITION</span>
+            </div>
+            <div class="server-chip"><span class="tiny-crosshair">⌖</span><span id="server-short">CLOUDFLARE NETWORK</span></div>
+          </div>
+
+          <div class="instrument-cluster">
+          <div class="gauge-wrap">
+            <div class="gauge-halo" aria-hidden="true"></div>
+            <svg id="gauge" class="gauge" viewBox="0 0 360 270" role="img" aria-label="Speedometer gauge">
+              <defs>
+                <linearGradient id="arcGradient" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#f0f3ef" stop-opacity=".85"/>
+                  <stop offset="54%" stop-color="#b9c9bf" stop-opacity=".8"/>
+                  <stop offset="100%" stop-color="#ef453b" stop-opacity=".98"/>
+                </linearGradient>
+                <filter id="needleGlow" x="-200%" y="-200%" width="500%" height="500%">
+                  <feGaussianBlur stdDeviation="3" result="blur"/>
+                  <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+              </defs>
+              <path class="gauge-track" d="M 52 224 A 132 132 0 1 1 308 224"/>
+              <path class="gauge-progress" id="gauge-progress" d="M 52 224 A 132 132 0 1 1 308 224"/>
+              <g id="gauge-ticks"></g>
+              <g id="gauge-labels"></g>
+              <path id="needle" class="needle" d="M 176.8 222 L 180 72 L 183.2 222 Z" />
+              <circle class="needle-hub-outer" cx="180" cy="218" r="13"/>
+              <circle class="needle-hub" cx="180" cy="218" r="6"/>
+            </svg>
+            <div class="readout">
+              <div class="readout-kicker" id="readout-label">DOWNLOAD</div>
+              <div class="readout-number" id="speed-value">—<span> Mbps</span></div>
+              <div class="readout-caption" id="readout-caption">PRESS START TO BEGIN</div>
+            </div>
+          </div>
+          <div class="aux-gauges" aria-label="Additional network gauges">
+            <article class="aux-gauge" data-gauge="upload">
+              <div class="aux-heading"><span>02 — RPM</span><span>SEND</span></div>
+              <svg class="aux-dial" viewBox="0 0 160 160" role="img" aria-label="Upload speed RPM-inspired gauge">
+                <circle class="dial-case" cx="80" cy="80" r="77"/>
+                <circle class="dial-bezel" cx="80" cy="80" r="72"/>
+                <circle class="dial-face" cx="80" cy="80" r="67"/>
+                <path class="dial-track" d="M 34.75 125.25 A 64 64 0 1 1 125.25 125.25"/>
+                <g class="dial-ticks"></g><g class="dial-labels"></g>
+                <path class="dial-needle" d="M 77.5 84 L 80 29 L 82.5 84 Z"/>
+                <circle class="dial-hub-ring" cx="80" cy="80" r="8"/>
+                <circle class="dial-hub" cx="80" cy="80" r="3.5"/>
+              </svg>
+              <div class="aux-value" id="upload-result">—<span> Mbps</span></div>
+              <div class="aux-foot">UPLOAD THROUGHPUT</div>
+            </article>
+            <article class="aux-gauge fuel-gauge" data-gauge="ping">
+              <div class="aux-heading"><span>03 — FUEL</span><span>LOW IS BETTER</span></div>
+              <svg class="aux-dial" viewBox="0 0 160 160" role="img" aria-label="Ping latency fuel-style gauge">
+                <circle class="dial-case" cx="80" cy="80" r="77"/>
+                <circle class="dial-bezel" cx="80" cy="80" r="72"/>
+                <circle class="dial-face" cx="80" cy="80" r="67"/>
+                <path class="dial-track" d="M 34.75 125.25 A 64 64 0 1 1 125.25 125.25"/>
+                <g class="dial-ticks"></g><g class="dial-labels"></g>
+                <path class="dial-needle" d="M 77.5 84 L 80 29 L 82.5 84 Z"/>
+                <circle class="dial-hub-ring" cx="80" cy="80" r="8"/>
+                <circle class="dial-hub" cx="80" cy="80" r="3.5"/>
+              </svg>
+              <div class="aux-value" id="ping-result">—<span> ms</span></div>
+              <div class="aux-foot">ROUND-TRIP TIME</div>
+            </article>
+            <article class="aux-gauge temp-gauge" data-gauge="jitter">
+              <div class="aux-heading"><span>04 — TEMP</span><span>STABILITY</span></div>
+              <svg class="aux-dial" viewBox="0 0 160 160" role="img" aria-label="Jitter stability temperature-style gauge">
+                <circle class="dial-case" cx="80" cy="80" r="77"/>
+                <circle class="dial-bezel" cx="80" cy="80" r="72"/>
+                <circle class="dial-face" cx="80" cy="80" r="67"/>
+                <path class="dial-track" d="M 34.75 125.25 A 64 64 0 1 1 125.25 125.25"/>
+                <g class="dial-ticks"></g><g class="dial-labels"></g>
+                <path class="dial-needle" d="M 77.5 84 L 80 29 L 82.5 84 Z"/>
+                <circle class="dial-hub-ring" cx="80" cy="80" r="8"/>
+                <circle class="dial-hub" cx="80" cy="80" r="3.5"/>
+              </svg>
+              <div class="aux-value" id="jitter-result">—<span> ms</span></div>
+              <div class="aux-foot">PING VARIATION</div>
+            </article>
+          </div>
+          </div>
+
+          <div class="phase-progress" aria-label="Test progress">
+            <div class="phase-step active" id="step-ping"><span class="step-index">01</span><span>PING</span></div>
+            <span class="step-rail"></span>
+            <div class="phase-step" id="step-download"><span class="step-index">02</span><span>DOWNLOAD</span></div>
+            <span class="step-rail"></span>
+            <div class="phase-step" id="step-upload"><span class="step-index">03</span><span>UPLOAD</span></div>
+          </div>
+
+          <div class="action-row">
+            <button type="button" class="start-button" id="start-button">
+              <span class="button-icon" aria-hidden="true"><span></span></span>
+              <span id="button-label">START TEST</span>
+              <span class="button-arrow" aria-hidden="true">↗</span>
+            </button>
+            <button type="button" class="reset-button" id="reset-button" aria-label="Reset test" title="Reset test">↻</button>
+          </div>
+          <p class="engine-note" id="engine-note">REAL TRANSFER · CLOUDFLARE SPEED TEST</p>
+        </section>
+      </section>
+
+      <section class="details-grid">
+        <article class="detail-panel">
+          <div class="panel-heading"><span class="panel-icon">◉</span><h3>Network details</h3><span class="panel-rule"></span><span class="panel-index">01</span></div>
+          <div class="detail-row"><span>Internet provider</span><strong id="isp-value">Looking up…</strong></div>
+          <div class="detail-row"><span>Public address</span><strong class="mono" id="ip-value">—</strong></div>
+          <div class="detail-row"><span>Network location</span><strong id="location-value">—</strong></div>
+        </article>
+        <article class="detail-panel">
+          <div class="panel-heading"><span class="panel-icon">⌖</span><h3>Test server</h3><span class="panel-rule"></span><span class="panel-index">02</span></div>
+          <div class="detail-row"><span>Provider</span><strong>Cloudflare</strong></div>
+          <div class="detail-row"><span>Edge location</span><strong id="edge-value">Resolving…</strong></div>
+          <div class="detail-row"><span>Test method</span><strong>Live data transfer</strong></div>
+        </article>
+      </section>
+
+      <section class="history-section">
+        <div class="section-heading history-heading">
+          <div><p class="eyebrow"><span class="eyebrow-line"></span> BLACK BOX</p><h2>Recent runs</h2></div>
+          <button type="button" class="clear-history" id="clear-history">CLEAR HISTORY</button>
+        </div>
+        <div class="history-list" id="history-list"></div>
+      </section>
+
+      <footer class="footer">
+        <span><span class="footer-mark">A</span> APEX NETWORK PERFORMANCE</span>
+        <span>MEASURED FROM YOUR BROWSER <i>·</i> RESULTS MAY VARY BY DEVICE &amp; NETWORK</span>
+      </footer>
+      <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>
