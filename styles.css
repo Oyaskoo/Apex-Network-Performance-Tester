@@ -56,8 +56,8 @@ h1 em { color: var(--green); font-style: normal; }
 .state-dot { width: 5px; height: 5px; }
 .server-chip { padding: 7px 9px; border: 1px solid rgba(212,228,215,.08); color: #79867d; letter-spacing: .1em; }
 .tiny-crosshair { color: var(--green); font-size: 13px; }
-.instrument-cluster { display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(0, .88fr); grid-template-areas: "speed rpm" "fuel temp" "jitter jitter"; align-items: center; justify-items: center; gap: 2px 6px; margin: 9px -10px 0; }
-.gauge-wrap { grid-area: speed; position: relative; width: min(100%, 260px); aspect-ratio: 1; height: auto; margin: 0 auto; }
+.instrument-cluster { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-areas: "speed rpm" "fuel temp" "jitter jitter"; align-items: start; justify-items: center; gap: clamp(4px, 1vw, 8px) 2%; margin: 9px 0 0; }
+.gauge-wrap { grid-area: speed; position: relative; width: 100%; max-width: none; aspect-ratio: 1; height: auto; margin: 0 auto; }
 .gauge-halo { position: absolute; width: 65%; height: 36%; left: 17.5%; bottom: 9%; border-radius: 50%; background: rgba(110,174,88,.08); filter: blur(34px); }
 .gauge { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
 .gauge-track, .gauge-progress { fill: none; stroke-linecap: round; }
@@ -82,16 +82,15 @@ h1 em { color: var(--green); font-style: normal; }
 .readout-number { margin: 2px 0 0; color: #f2f5ef; font: 600 clamp(26px, 3.2vw, 38px)/1 "Barlow Condensed",sans-serif; letter-spacing: -.035em; text-shadow: 0 0 24px rgba(190,222,193,.08); font-variant-numeric: tabular-nums; }
 .readout-number span { color: #8c9890; font: 500 9px Inter,sans-serif; letter-spacing: .04em; }
 .readout-caption { margin-top: 4px; color: #78857b; font: 600 6px Inter,sans-serif; letter-spacing: .12em; }
-.aux-gauge { --dial-accent: #ef463d; --dial-glow: rgba(239,70,61,.38); min-width: 0; padding: 3px 4px 5px; text-align: center; }
-.rpm-gauge { grid-area: rpm; width: min(100%, 210px); }
+.aux-gauge { --dial-accent: #ef463d; --dial-glow: rgba(239,70,61,.38); position: relative; width: 100%; min-width: 0; aspect-ratio: 1; padding: 0; text-align: center; }
+.rpm-gauge { grid-area: rpm; }
 .fuel-gauge { --dial-accent: #e8473f; --dial-glow: rgba(232,71,63,.32); }
 .temp-gauge { --dial-accent: #46cfe2; --dial-glow: rgba(70,207,226,.34); }
-.fuel-gauge { grid-area: fuel; width: min(100%, 150px); }
-.temp-gauge { grid-area: temp; width: min(100%, 150px); }
-.aux-heading { display: flex; justify-content: space-between; gap: 3px; margin: 0 2px -2px; color: #c4cdc5; font: 700 7px Inter,sans-serif; letter-spacing: .08em; white-space: nowrap; }
-.aux-heading span:last-child { color: #657269; font-size: 6px; }
-.aux-dial { display: block; width: min(100%, 205px); height: auto; margin: 0 auto; overflow: visible; }
-.fuel-gauge .aux-dial, .temp-gauge .aux-dial { width: min(100%, 140px); }
+.fuel-gauge { grid-area: fuel; width: 48%; }
+.temp-gauge { grid-area: temp; width: 48%; }
+.aux-heading { position: absolute; z-index: 1; top: 83%; left: 3%; right: 3%; display: flex; justify-content: center; gap: 3px; margin: 0; overflow: hidden; color: #c4cdc5; font: 700 clamp(5px, .55vw, 7px) Inter,sans-serif; letter-spacing: .08em; white-space: nowrap; }
+.aux-heading span:last-child { display: none; }
+.aux-dial { position: absolute; inset: 0; display: block; width: 100%; height: 100%; margin: 0; overflow: visible; }
 .dial-case { fill: #090b0a; stroke: #555b56; stroke-width: 2; filter: drop-shadow(0 2px 3px rgba(0,0,0,.8)); }
 .dial-bezel { fill: #111512; stroke: #242a25; stroke-width: 5; }
 .dial-face { fill: #0b0e0c; stroke: #050706; stroke-width: 1.5; }
@@ -106,9 +105,9 @@ h1 em { color: var(--green); font-style: normal; }
 .dial-hub-shadow { fill: rgba(0,0,0,.7); }
 .dial-hub-ring { fill: #252a26; stroke: #a2aaa3; stroke-width: .9; }
 .dial-hub { fill: #e7ece7; }
-.aux-value { margin-top: -7px; color: #edf2ed; font: 600 17px/1 "Barlow Condensed",sans-serif; font-variant-numeric: tabular-nums; }
-.aux-value span { color: #89958b; font: 500 8px Inter,sans-serif; }
-.aux-foot { margin-top: 3px; color: #68746c; font: 600 6px Inter,sans-serif; letter-spacing: .1em; }
+.aux-value { position: absolute; top: 65%; left: 0; width: 100%; margin: 0; color: #edf2ed; font: 600 clamp(8px, 1.35vw, 17px)/1 "Barlow Condensed",sans-serif; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.aux-value span { color: #89958b; font: 500 clamp(5px, .62vw, 8px) Inter,sans-serif; }
+.aux-foot { position: absolute; top: 75%; left: 3%; right: 3%; overflow: hidden; margin: 0; color: #68746c; font: 600 clamp(4px, .47vw, 6px) Inter,sans-serif; letter-spacing: .1em; white-space: nowrap; }
 .jitter-readout { grid-area: jitter; width: 100%; display: flex; justify-content: center; align-items: center; gap: 8px; min-height: 20px; border-top: 1px solid rgba(215,229,219,.07); color: #728078; font: 600 7px Inter,sans-serif; letter-spacing: .12em; }
 .jitter-readout strong { color: #dce5dc; font: 600 12px "Barlow Condensed",sans-serif; letter-spacing: 0; }
 .jitter-readout small { color: #89958b; font: 500 7px Inter,sans-serif; }
@@ -170,11 +169,6 @@ h3 { margin: 0; color: #d4ddd5; font: 600 11px "Space Grotesk",sans-serif; }
   h1 { max-width: none; margin-bottom: 12px; font-size: 47px; }
   .intro-copy { max-width: 480px; margin: 0 auto; }
   .cockpit { width: min(100%, 580px); margin: 0 auto; }
-  .instrument-cluster { grid-template-columns: minmax(0, 1.12fr) minmax(0, .88fr); }
-  .gauge-wrap { width: min(100%, 240px); }
-  .rpm-gauge { width: min(100%, 190px); }
-  .fuel-gauge, .temp-gauge { width: min(100%, 138px); }
-  .aux-heading { font-size: 6px; }
 }
 @media (max-width: 520px) {
   .shell { width: calc(100% - 28px); }
@@ -188,15 +182,6 @@ h3 { margin: 0; color: #d4ddd5; font: 600 11px "Space Grotesk",sans-serif; }
   .cockpit { padding: 13px 13px 17px; }
   .cockpit-top { font-size: 7px; }
   .server-chip { padding: 6px; gap: 5px; }
-  .instrument-cluster { grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr); gap: 2px 4px; margin: 5px -5px 0; }
-  .gauge-wrap { width: min(100%, 210px); }
-  .rpm-gauge { width: min(100%, 160px); }
-  .fuel-gauge, .temp-gauge { width: min(100%, 124px); }
-  .aux-gauge { padding: 4px 6px 6px; }
-  .aux-dial { width: min(100%, 160px); }
-  .fuel-gauge .aux-dial, .temp-gauge .aux-dial { width: min(100%, 124px); }
-  .aux-heading { font-size: 6px; }
-  .aux-heading span:last-child { font-size: 5px; }
   .readout { top: 68%; }
   .readout-kicker { font-size: 6px; }
   .readout-number { font-size: clamp(16px, 5.5vw, 22px); }
