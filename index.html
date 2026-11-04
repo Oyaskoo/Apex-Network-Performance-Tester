@@ -30,16 +30,18 @@
           <p class="intro-copy">A real-time read on your connection. No estimates, no simulated numbers — just your network at full throttle.</p>
         </div>
 
-        <section class="cockpit" aria-label="Live speed test">
+        <section class="cockpit" id="cockpit" aria-label="Live speed test">
           <div class="cockpit-top">
             <div class="test-state">
               <span class="state-dot" id="phase-dot"></span>
               <span id="phase-label">READY FOR IGNITION</span>
             </div>
+            <span class="live-indicator" id="live-indicator" aria-hidden="true"><i></i> LIVE</span>
             <div class="server-chip"><span class="tiny-crosshair">⌖</span><span id="server-short">CLOUDFLARE NETWORK</span></div>
           </div>
 
           <div class="instrument-cluster" aria-label="Four live automotive-style network gauges">
+          <div class="gauge-cell small-cell ping-cell" data-measurement="ping">
           <div class="aux-gauge fuel-gauge" data-gauge="ping">
             <svg class="aux-dial" viewBox="0 0 160 160" role="img" aria-label="Ping latency fuel gauge, E is poor and F is excellent">
               <circle class="dial-case" cx="80" cy="80" r="77"/>
@@ -54,6 +56,9 @@
             </svg>
             <div class="aux-value" id="ping-result">—<span> ms</span></div>
           </div>
+            <div class="gauge-caption"><span class="measurement-name">PING</span><span class="measurement-unit">ms</span></div>
+          </div>
+          <div class="gauge-cell large-cell download-cell" data-measurement="download">
           <div class="gauge-wrap">
             <div class="gauge-halo" aria-hidden="true"></div>
             <svg id="gauge" class="gauge" viewBox="0 0 360 360" role="img" aria-label="Download speedometer, scale 0 to 100 megabits per second">
@@ -85,6 +90,9 @@
               <span class="digital-unit">Mbps</span>
             </div>
           </div>
+            <div class="gauge-caption"><span class="measurement-name">DOWNLOAD</span><span class="measurement-unit">Mbps peak</span></div>
+          </div>
+          <div class="gauge-cell large-cell upload-cell" data-measurement="upload">
           <div class="aux-gauge rpm-gauge" data-gauge="upload">
             <svg class="aux-dial" viewBox="0 0 160 160" role="img" aria-label="Upload speed tachometer">
               <circle class="dial-case" cx="80" cy="80" r="77"/>
@@ -102,6 +110,9 @@
               <span class="digital-unit">Mbps</span>
             </div>
           </div>
+            <div class="gauge-caption"><span class="measurement-name">UPLOAD</span><span class="measurement-unit">Mbps peak</span></div>
+          </div>
+          <div class="gauge-cell small-cell signal-cell" data-measurement="signal">
           <div class="aux-gauge temp-gauge" data-gauge="signal">
             <svg class="aux-dial" viewBox="0 0 160 160" role="img" aria-label="Network link estimate, C is weak and H is strong">
               <circle class="dial-case" cx="80" cy="80" r="77"/>
@@ -116,6 +127,7 @@
             </svg>
             <div class="aux-value" id="signal-result">—<span> Mbps</span></div>
           </div>
+            <div class="gauge-caption" id="signal-caption" title="Signal strength is not exposed by most browsers; this is a link-rate estimate."><span class="measurement-name">SIGNAL</span><span class="measurement-unit" id="signal-unit">Mbps est.</span></div>
           </div>
           <div class="jitter-readout"><span>NETWORK JITTER</span><strong id="jitter-result">—<small> ms</small></strong></div>
 

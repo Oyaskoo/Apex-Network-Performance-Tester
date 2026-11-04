@@ -239,7 +239,18 @@ function setJitter(value) {
 }
 
 function setSignalEstimate(value) {
+  const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+  const signalPercent = connection?.signalStrengthPercent;
+  if (Number.isFinite(signalPercent) && signalPercent >= 0 && signalPercent <= 100) {
+    setAuxGauge("signal", signalPercent);
+    $("signal-result").innerHTML = `${formatReading(signalPercent)}<span> %</span>`;
+    $("signal-unit").textContent = "signal %";
+    $("signal-caption").title = "Signal strength percentage reported by the browser.";
+    return;
+  }
   setAuxGauge("signal", value);
+  $("signal-unit").textContent = "Mbps est.";
+  $("signal-caption").title = "Signal strength is not exposed by most browsers; this is a link-rate estimate.";
 }
 
 function resetSignalEstimate() {
@@ -247,8 +258,13 @@ function resetSignalEstimate() {
 }
 function setPhase(phase, label) {
   $("phase-label").textContent = label;
+  $("cockpit").classList.toggle("is-running", running);
   $("phase-dot").classList.toggle("busy", running);
   $("phase-dot").classList.toggle("error", phase === "error");
+  const activeGauge = { ping: "ping", download: "download", upload: "upload" }[phase];
+  document.querySelectorAll(".gauge-cell").forEach((cell) => {
+    cell.classList.toggle("is-active", cell.dataset.measurement === activeGauge);
+  });
   $("header-status").textContent = running ? "TEST IN PROGRESS" : phase === "error" ? "TEST INTERRUPTED" : phase === "done" ? "TEST COMPLETE" : "SYSTEM READY";
   $("header-status").previousElementSibling.classList.toggle("busy", running);
   $("header-status").previousElementSibling.classList.toggle("error", phase === "error");
@@ -473,7 +489,7 @@ async function runTest() {
   setJitter(null);
   setGauge(0, "download");
   try {
-    setPhase("ping", "MEASURING LATENCY");
+    setPhase("ping", "MEASURING PING");
     const { ping, jitter } = await measurePing(controller.signal);
     const download = await runDownload(controller.signal);
     const upload = await runUpload(controller.signal);
@@ -489,6 +505,7 @@ async function runTest() {
     return;
   } catch (error) {
     if (currentController !== controller) return;
+    running = false;
     if (error.name === "AbortError") {
       setPhase("error", "TEST CANCELLED");
     } else {
@@ -500,11 +517,21 @@ async function runTest() {
       $("engine-note").textContent = "FAILED · NO COMPLETE RESULTS SAVED";
       setPhase("error", "TEST FAILED");
     }
-    running = false;
     currentController = null;
     startButton.disabled = false;
     buttonLabel.textContent = "RETRY TEST";
   }
+}
+
+function providerName(value) {
+  if (typeof value === "string" && value.trim()) return value.trim();
+  if (typeof value === "number" && Number.isFinite(value)) return String(value);
+  if (!value || typeof value !== "object") return "";
+  for (const key of ["name", "organization", "org", "provider", "isp", "displayName", "asOrganization"]) {
+    const name = providerName(value[key]);
+    if (name) return name;
+  }
+  return "";
 }
 
 async function loadNetworkInfo() {
@@ -519,7 +546,7 @@ async function loadNetworkInfo() {
     const response = await fetch(`${ENDPOINT}/meta`, { cache: "no-store" });
     if (!response.ok) throw new Error(`Network metadata request returned HTTP ${response.status}.`);
     const metadata = await response.json();
-    $("isp-value").textContent = metadata.asOrganization || metadata.asn || "Unavailable";
+    $("isp-value").textContent = providerName(metadata.asOrganization) || providerName(metadata.isp) || providerName(metadata.asn) || "Unavailable";
     $("ip-value").textContent = metadata.clientIp || "Unavailable";
     const location = [metadata.city, metadata.region, metadata.country].filter(Boolean).join(", ");
     $("location-value").textContent = location || "Unavailable";
