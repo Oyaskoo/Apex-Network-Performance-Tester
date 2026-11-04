@@ -21,8 +21,22 @@ const AUX_DIAL_CONFIG = {
 };
 const UPLOAD_SCALES = [50, 100, 200, 300, 500, 1000];
 const SPEED_SCALES = [100, 200, 300, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000];
+const SEVEN_SEGMENT_DIGITS = {
+  0: "abcdef",
+  1: "bc",
+  2: "abged",
+  3: "abgcd",
+  4: "fgbc",
+  5: "afgcd",
+  6: "afgecd",
+  7: "abc",
+  8: "abcdefg",
+  9: "abfgcd",
+};
 let speedScale = 100;
 let browserDownlink = null;
+let downloadPeak = 0;
+let uploadPeak = 0;
 
 function polar(cx, cy, radius, angle) {
   const radians = (angle - 90) * Math.PI / 180;
@@ -137,6 +151,34 @@ function updateAuxScale(name, scale) {
   }
 }
 
+function renderDigitalReadout(id, value, direction) {
+  const formatted = formatSpeed(value);
+  const digits = $(id);
+  const display = $(`${direction === "download" ? "speed" : "upload"}-peak-display`);
+  if (digits.dataset.value === formatted) return;
+  const fragment = document.createDocumentFragment();
+  for (const character of formatted) {
+    if (character === ".") {
+      const decimal = document.createElement("i");
+      decimal.className = "digital-dot";
+      fragment.append(decimal);
+      continue;
+    }
+    const digit = document.createElement("span");
+    digit.className = "digital-digit";
+    digit.setAttribute("aria-hidden", "true");
+    for (const segmentName of "abcdefg") {
+      const segment = document.createElement("i");
+      segment.className = `segment-${segmentName}${SEVEN_SEGMENT_DIGITS[character]?.includes(segmentName) ? " on" : ""}`;
+      digit.append(segment);
+    }
+    fragment.append(digit);
+  }
+  digits.replaceChildren(fragment);
+  digits.dataset.value = formatted;
+  display.setAttribute("aria-label", `Peak ${direction} speed ${formatted} megabits per second`);
+}
+
 function setAuxGauge(name, value) {
   const config = AUX_DIAL_CONFIG[name];
   const dial = document.querySelector(`.aux-gauge[data-gauge="${name}"]`);
@@ -153,11 +195,20 @@ function setAuxGauge(name, value) {
   dial.querySelectorAll(".dial-tick").forEach((tick) => {
     tick.classList.toggle("active", hasValue && Number(tick.dataset.index) <= Math.round(ratio * 36));
   });
-  $(`${name}-result`).innerHTML = `${hasValue ? formatReading(value) : "—"}<span> ${config.unit}</span>`;
+  if (name === "upload") {
+    if (hasValue) uploadPeak = Math.max(uploadPeak, value);
+    renderDigitalReadout("upload-result", uploadPeak, "upload");
+  } else {
+    $(`${name}-result`).innerHTML = `${hasValue ? formatReading(value) : "—"}<span> ${config.unit}</span>`;
+  }
 }
 
 function setGauge(speed, phase) {
   updateSpeedScale(speed);
+  if (phase === "download") {
+    downloadPeak = Math.max(downloadPeak, speed);
+    renderDigitalReadout("speed-value", downloadPeak, "download");
+  }
   const ratio = Math.max(0, Math.min(speed / speedScale, 1));
   const angle = -135 + ratio * 270;
   needle.style.transform = `rotate(${angle}deg)`;
@@ -166,8 +217,6 @@ function setGauge(speed, phase) {
   gaugeTicks.querySelectorAll(".tick").forEach((tick) => {
     tick.classList.toggle("active", Number(tick.dataset.index) <= litTicks);
   });
-  const suffix = phase === "download" ? " Mbps" : phase === "upload" ? " Mbps" : "";
-  $("speed-value").innerHTML = `${formatSpeed(speed)}<span>${suffix}</span>`;
 }
 
 function formatSpeed(value) {
@@ -353,6 +402,9 @@ async function measurePing(signal) {
 
 async function runDownload(signal) {
   setPhase("download", "MEASURING DOWNLOAD");
+  downloadPeak = 0;
+  renderDigitalReadout("speed-value", downloadPeak, "download");
+  setGauge(0, "download");
   let totalBytes = 0;
   let totalSeconds = 0;
   for (const [index, bytes] of DOWNLOAD_SIZES.entries()) {
@@ -375,9 +427,12 @@ async function runDownload(signal) {
 
 async function runUpload(signal) {
   setPhase("upload", "MEASURING UPLOAD");
+  uploadPeak = 0;
+  renderDigitalReadout("upload-result", uploadPeak, "upload");
+  updateAuxScale("upload", AUX_DIAL_CONFIG.upload.initialMax);
+  setAuxGauge("upload", 0);
   let totalBytes = 0;
   let totalSeconds = 0;
-  setAuxGauge("upload", null);
   for (const [index, bytes] of UPLOAD_SIZES.entries()) {
     const payload = new Uint8Array(bytes);
     for (let offset = 0; offset < payload.length; offset += 65_536) {
@@ -407,13 +462,16 @@ async function runTest() {
   startButton.disabled = true;
   buttonLabel.textContent = "TESTING…";
   $("engine-note").textContent = "REAL TRANSFER · CLOUDFLARE SPEED TEST";
+  downloadPeak = 0;
+  uploadPeak = 0;
+  renderDigitalReadout("speed-value", downloadPeak, "download");
+  renderDigitalReadout("upload-result", uploadPeak, "upload");
   updateAuxScale("upload", AUX_DIAL_CONFIG.upload.initialMax);
   setAuxGauge("upload", null);
   setAuxGauge("ping", null);
   setSignalEstimate(null);
   setJitter(null);
   setGauge(0, "download");
-  $("speed-value").innerHTML = `—<span> Mbps</span>`;
   try {
     setPhase("ping", "MEASURING LATENCY");
     const { ping, jitter } = await measurePing(controller.signal);
@@ -484,18 +542,23 @@ function resetTest() {
   startButton.disabled = false;
   buttonLabel.textContent = "START TEST";
   $("engine-note").textContent = "REAL TRANSFER · CLOUDFLARE SPEED TEST";
+  downloadPeak = 0;
+  uploadPeak = 0;
+  renderDigitalReadout("speed-value", downloadPeak, "download");
+  renderDigitalReadout("upload-result", uploadPeak, "upload");
   updateAuxScale("upload", AUX_DIAL_CONFIG.upload.initialMax);
   setAuxGauge("upload", null);
   setAuxGauge("ping", null);
   setSignalEstimate(null);
   setJitter(null);
   setGauge(0, "download");
-  $("speed-value").innerHTML = `—<span> Mbps</span>`;
   setPhase("ready", "READY FOR IGNITION");
 }
 
 buildGauge();
 buildAuxGauges();
+renderDigitalReadout("speed-value", downloadPeak, "download");
+renderDigitalReadout("upload-result", uploadPeak, "upload");
 renderHistory();
 loadNetworkInfo();
 startButton.addEventListener("click", runTest);

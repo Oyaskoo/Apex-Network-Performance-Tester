@@ -47,7 +47,7 @@ h1, h2, h3, p { margin-top: 0; }
 h1 { max-width: 320px; margin-bottom: 19px; font: 500 clamp(39px, 5vw, 58px)/.99 "Space Grotesk", sans-serif; letter-spacing: -.055em; }
 h1 em { color: var(--green); font-style: normal; }
 .intro-copy { max-width: 305px; color: #89938d; font-size: 13px; line-height: 1.85; }
-.cockpit { padding: 16px 30px 19px; border: 1px solid rgba(215,229,219,.16); border-radius: 8% 8% 5% 5% / 6% 6% 4% 4%; background:
+.cockpit { padding: 16px 24px 19px; border: 1px solid rgba(215,229,219,.16); border-radius: 10% 10% 6% 6% / 9% 9% 7% 7%; background:
   linear-gradient(135deg, rgba(255,255,255,.025), transparent 38%),
   repeating-linear-gradient(135deg,rgba(255,255,255,.012) 0 1px,transparent 1px 4px),
   linear-gradient(160deg,#181d1a,#0b0f0d 62%); box-shadow: 0 22px 70px rgba(0,0,0,.4), inset 0 0 0 5px rgba(202,214,204,.025), inset 0 1px rgba(255,255,255,.055); }
@@ -56,7 +56,7 @@ h1 em { color: var(--green); font-style: normal; }
 .state-dot { width: 5px; height: 5px; }
 .server-chip { padding: 7px 9px; border: 1px solid rgba(212,228,215,.08); color: #79867d; letter-spacing: .1em; }
 .tiny-crosshair { color: var(--green); font-size: 13px; }
-.instrument-cluster { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-areas: "speed rpm" "fuel temp" "jitter jitter"; align-items: start; justify-items: center; gap: clamp(4px, 1vw, 8px) 2%; margin: 9px 0 0; }
+.instrument-cluster { display: grid; grid-template-columns: 19.4% 29.1% 29.1% 19.4%; grid-template-areas: "fuel speed rpm temp"; align-items: center; justify-items: center; column-gap: 1%; margin: 15px 0 0; }
 .gauge-wrap { grid-area: speed; position: relative; width: 100%; max-width: none; aspect-ratio: 1; height: auto; margin: 0 auto; }
 .gauge-halo { position: absolute; width: 65%; height: 36%; left: 17.5%; bottom: 9%; border-radius: 50%; background: rgba(110,174,88,.08); filter: blur(34px); }
 .gauge { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
@@ -77,15 +77,12 @@ h1 em { color: var(--green); font-style: normal; }
 .needle-hub-shadow { fill: rgba(0,0,0,.72); }
 .needle-hub-outer { fill: #252b26; stroke: #929990; stroke-width: 1.2; }
 .needle-hub { fill: #c4ccc6; stroke: #404842; stroke-width: 1; filter: drop-shadow(0 0 4px rgba(220,230,220,.45)); }
-.readout { position: absolute; top: 68%; left: 0; width: 100%; text-align: center; pointer-events: none; }
-.readout-number { margin: 2px 0 0; color: #f2f5ef; font: 600 clamp(26px, 3.2vw, 38px)/1 "Barlow Condensed",sans-serif; letter-spacing: -.035em; text-shadow: 0 0 24px rgba(190,222,193,.08); font-variant-numeric: tabular-nums; }
-.readout-number span { color: #8c9890; font: 500 9px Inter,sans-serif; letter-spacing: .04em; }
 .aux-gauge { --dial-accent: #ef463d; --dial-glow: rgba(239,70,61,.38); position: relative; width: 100%; min-width: 0; aspect-ratio: 1; padding: 0; text-align: center; }
 .rpm-gauge { grid-area: rpm; }
 .fuel-gauge { --dial-accent: #e8473f; --dial-glow: rgba(232,71,63,.32); }
 .temp-gauge { --dial-accent: #46cfe2; --dial-glow: rgba(70,207,226,.34); }
-.fuel-gauge { grid-area: fuel; width: 48%; }
-.temp-gauge { grid-area: temp; width: 48%; }
+.fuel-gauge { grid-area: fuel; }
+.temp-gauge { grid-area: temp; }
 .aux-dial { position: absolute; inset: 0; display: block; width: 100%; height: 100%; margin: 0; overflow: visible; }
 .dial-case { fill: #090b0a; stroke: #555b56; stroke-width: 2; filter: drop-shadow(0 2px 3px rgba(0,0,0,.8)); }
 .dial-bezel { fill: #111512; stroke: #242a25; stroke-width: 5; }
@@ -101,9 +98,25 @@ h1 em { color: var(--green); font-style: normal; }
 .dial-hub-shadow { fill: rgba(0,0,0,.7); }
 .dial-hub-ring { fill: #252a26; stroke: #a2aaa3; stroke-width: .9; }
 .dial-hub { fill: #e7ece7; }
-.aux-value { position: absolute; top: 65%; left: 0; width: 100%; margin: 0; color: #edf2ed; font: 600 clamp(8px, 1.35vw, 17px)/1 "Barlow Condensed",sans-serif; font-variant-numeric: tabular-nums; white-space: nowrap; }
-.aux-value span { color: #89958b; font: 500 clamp(5px, .62vw, 8px) Inter,sans-serif; }
-.jitter-readout { grid-area: jitter; width: 100%; display: flex; justify-content: center; align-items: center; gap: 8px; min-height: 20px; border-top: 1px solid rgba(215,229,219,.07); color: #728078; font: 600 7px Inter,sans-serif; letter-spacing: .12em; }
+.digital-display { position: absolute; z-index: 1; left: 50%; bottom: 11%; width: 43%; min-height: 9%; display: flex; align-items: center; justify-content: center; gap: 5%; padding: 2% 3%; transform: translateX(-50%); border: 1px solid rgba(157,171,161,.38); border-radius: 2px; background: linear-gradient(180deg,#121a18,#050807); box-shadow: inset 0 1px 4px rgba(0,0,0,.9), 0 0 8px rgba(151,187,164,.08); color: #b7e7c7; pointer-events: none; }
+.digital-digits { height: 1em; display: inline-flex; align-items: center; gap: .12em; font: 600 clamp(4px, .7vw, 9px)/1 "Share Tech Mono", Consolas, monospace; font-variant-numeric: tabular-nums; }
+.digital-digit { position: relative; display: inline-block; width: .62em; height: 1em; }
+.digital-digit i { position: absolute; display: block; opacity: .14; background: #52705c; filter: drop-shadow(0 0 1px rgba(132,229,165,.35)); }
+.digital-digit i.on { opacity: 1; background: #b7e7c7; filter: drop-shadow(0 0 2px rgba(132,229,165,.75)); }
+.digital-digit .segment-a, .digital-digit .segment-g, .digital-digit .segment-d { left: 18%; width: 64%; height: 10%; clip-path: polygon(16% 0,84% 0,100% 50%,84% 100%,16% 100%,0 50%); }
+.digital-digit .segment-a { top: 2%; }
+.digital-digit .segment-g { top: 45%; }
+.digital-digit .segment-d { bottom: 2%; }
+.digital-digit .segment-b, .digital-digit .segment-c, .digital-digit .segment-e, .digital-digit .segment-f { width: 16%; height: 42%; clip-path: polygon(50% 0,100% 12%,100% 86%,50% 100%,0 86%,0 12%); }
+.digital-digit .segment-f { top: 6%; left: 5%; }
+.digital-digit .segment-b { top: 6%; right: 5%; }
+.digital-digit .segment-e { bottom: 6%; left: 5%; }
+.digital-digit .segment-c { right: 5%; bottom: 6%; }
+.digital-dot { align-self: flex-end; width: .12em; height: .12em; margin: 0 0 .04em -.12em; border-radius: 50%; background: #b7e7c7; box-shadow: 0 0 2px rgba(132,229,165,.75); }
+.digital-unit { align-self: flex-end; padding-bottom: 2%; color: #91b69d; font: 600 clamp(3px, .48vw, 6px)/1 Inter,sans-serif; letter-spacing: .02em; }
+.aux-value { position: absolute; top: 69%; left: 0; width: 100%; margin: 0; color: #edf2ed; font: 600 clamp(5px, .7vw, 9px)/1 "Barlow Condensed",sans-serif; font-variant-numeric: tabular-nums; white-space: nowrap; text-shadow: 0 0 4px rgba(190,222,193,.2); }
+.aux-value span { color: #89958b; font: 500 clamp(3px, .42vw, 5px) Inter,sans-serif; }
+.jitter-readout { width: 100%; display: flex; justify-content: center; align-items: center; gap: 8px; min-height: 20px; margin-top: 12px; border-top: 1px solid rgba(215,229,219,.07); color: #728078; font: 600 7px Inter,sans-serif; letter-spacing: .12em; }
 .jitter-readout strong { color: #dce5dc; font: 600 12px "Barlow Condensed",sans-serif; letter-spacing: 0; }
 .jitter-readout small { color: #89958b; font: 500 7px Inter,sans-serif; }
 .phase-progress { width: min(330px, 95%); display: flex; margin: 0 auto 17px; align-items: center; justify-content: center; color: #68746c; font: 600 8px Inter,sans-serif; letter-spacing: .13em; }
@@ -163,7 +176,7 @@ h3 { margin: 0; color: #d4ddd5; font: 600 11px "Space Grotesk",sans-serif; }
   .intro .eyebrow { justify-content: center; }
   h1 { max-width: none; margin-bottom: 12px; font-size: 47px; }
   .intro-copy { max-width: 480px; margin: 0 auto; }
-  .cockpit { width: min(100%, 580px); margin: 0 auto; }
+  .cockpit { width: min(100%, 720px); margin: 0 auto; }
 }
 @media (max-width: 520px) {
   .shell { width: calc(100% - 28px); }
@@ -174,11 +187,17 @@ h3 { margin: 0; color: #d4ddd5; font: 600 11px "Space Grotesk",sans-serif; }
   .hero { padding: 35px 0 37px; gap: 18px; }
   h1 { font-size: 39px; }
   .intro-copy { max-width: 330px; font-size: 11px; }
-  .cockpit { padding: 13px 13px 17px; }
+  .cockpit { padding: 13px 10px 17px; }
   .cockpit-top { font-size: 7px; }
   .server-chip { padding: 6px; gap: 5px; }
   .readout { top: 68%; }
-  .readout-number { font-size: clamp(16px, 5.5vw, 22px); }
+  .instrument-cluster { column-gap: .5%; margin-top: 12px; }
+  .digital-display { gap: 3%; }
+  .digital-digits { font-size: clamp(4px, 1.65vw, 6px); }
+  .digital-unit { font-size: clamp(3px, 1.15vw, 4px); }
+  .aux-value { font-size: clamp(4px, 1.6vw, 6px); }
+  .aux-value span { font-size: clamp(3px, 1.1vw, 4px); }
+  .jitter-readout { margin-top: 9px; }
   .phase-progress { margin-bottom: 14px; font-size: 7px; letter-spacing: .08em; }
   .step-rail { margin: 0 5px; min-width: 8px; }
   .phase-step { gap: 4px; }

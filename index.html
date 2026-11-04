@@ -40,6 +40,20 @@
           </div>
 
           <div class="instrument-cluster" aria-label="Four live automotive-style network gauges">
+          <div class="aux-gauge fuel-gauge" data-gauge="ping">
+            <svg class="aux-dial" viewBox="0 0 160 160" role="img" aria-label="Ping latency fuel gauge, E is poor and F is excellent">
+              <circle class="dial-case" cx="80" cy="80" r="77"/>
+              <circle class="dial-bezel" cx="80" cy="80" r="72"/>
+              <circle class="dial-face" cx="80" cy="80" r="67"/>
+              <path class="dial-track" d="M 34.75 125.25 A 64 64 0 1 1 125.25 125.25"/>
+              <g class="dial-ticks"></g><g class="dial-labels"></g>
+              <path class="dial-needle" d="M 77.5 84 L 80 29 L 82.5 84 Z"/>
+              <circle class="dial-hub-shadow" cx="80" cy="80" r="8"/>
+              <circle class="dial-hub-ring" cx="80" cy="80" r="6"/>
+              <circle class="dial-hub" cx="80" cy="80" r="3"/>
+            </svg>
+            <div class="aux-value" id="ping-result">—<span> ms</span></div>
+          </div>
           <div class="gauge-wrap">
             <div class="gauge-halo" aria-hidden="true"></div>
             <svg id="gauge" class="gauge" viewBox="0 0 360 360" role="img" aria-label="Download speedometer, scale 0 to 100 megabits per second">
@@ -66,8 +80,9 @@
               <circle class="needle-hub-outer" cx="180" cy="180" r="11"/>
               <circle class="needle-hub" cx="180" cy="180" r="6"/>
             </svg>
-            <div class="readout">
-              <div class="readout-number" id="speed-value">—<span> Mbps</span></div>
+            <div class="digital-display" id="speed-peak-display" role="img" aria-label="Peak download speed 0 megabits per second">
+              <span class="digital-digits" id="speed-value" aria-hidden="true"></span>
+              <span class="digital-unit">Mbps</span>
             </div>
           </div>
           <div class="aux-gauge rpm-gauge" data-gauge="upload">
@@ -82,21 +97,10 @@
               <circle class="dial-hub-ring" cx="80" cy="80" r="6"/>
               <circle class="dial-hub" cx="80" cy="80" r="3"/>
             </svg>
-            <div class="aux-value" id="upload-result">—<span> Mbps</span></div>
-          </div>
-          <div class="aux-gauge fuel-gauge" data-gauge="ping">
-            <svg class="aux-dial" viewBox="0 0 160 160" role="img" aria-label="Ping latency fuel gauge, E is poor and F is excellent">
-              <circle class="dial-case" cx="80" cy="80" r="77"/>
-              <circle class="dial-bezel" cx="80" cy="80" r="72"/>
-              <circle class="dial-face" cx="80" cy="80" r="67"/>
-              <path class="dial-track" d="M 34.75 125.25 A 64 64 0 1 1 125.25 125.25"/>
-              <g class="dial-ticks"></g><g class="dial-labels"></g>
-              <path class="dial-needle" d="M 77.5 84 L 80 29 L 82.5 84 Z"/>
-              <circle class="dial-hub-shadow" cx="80" cy="80" r="8"/>
-              <circle class="dial-hub-ring" cx="80" cy="80" r="6"/>
-              <circle class="dial-hub" cx="80" cy="80" r="3"/>
-            </svg>
-            <div class="aux-value" id="ping-result">—<span> ms</span></div>
+            <div class="digital-display" id="upload-peak-display" role="img" aria-label="Peak upload speed 0 megabits per second">
+              <span class="digital-digits" id="upload-result" aria-hidden="true"></span>
+              <span class="digital-unit">Mbps</span>
+            </div>
           </div>
           <div class="aux-gauge temp-gauge" data-gauge="signal">
             <svg class="aux-dial" viewBox="0 0 160 160" role="img" aria-label="Network link estimate, C is weak and H is strong">
@@ -112,8 +116,8 @@
             </svg>
             <div class="aux-value" id="signal-result">—<span> Mbps</span></div>
           </div>
-          <div class="jitter-readout"><span>NETWORK JITTER</span><strong id="jitter-result">—<small> ms</small></strong></div>
           </div>
+          <div class="jitter-readout"><span>NETWORK JITTER</span><strong id="jitter-result">—<small> ms</small></strong></div>
 
           <div class="phase-progress" aria-label="Test progress">
             <div class="phase-step active" id="step-ping"><span class="step-index">01</span><span>PING</span></div>
