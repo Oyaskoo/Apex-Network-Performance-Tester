@@ -69,7 +69,7 @@ function buildAuxGauges() {
     for (let index = 0; index <= 36; index += 1) {
       const angle = -135 + (270 * index) / 36;
       const major = index % 3 === 0;
-      const redline = index >= 30;
+      const redline = config.reverse ? index <= 6 : index >= 30;
       const inner = polar(80, 80, major ? 54 : 57, angle);
       const outer = polar(80, 80, 63, angle);
       const tick = document.createElementNS("http://www.w3.org/2000/svg", "line");
@@ -129,10 +129,6 @@ function updateAuxScale(name, scale) {
   config.max = scale;
   dial.querySelectorAll(".dial-label").forEach((label) => {
     const index = Number(label.dataset.index);
-    if ((name === "ping" || name === "signal") && (index === 0 || index === 36)) {
-      label.textContent = name === "ping" ? (index === 0 ? "E" : "F") : (index === 0 ? "C" : "H");
-      return;
-    }
     const reading = name === "ping" ? scale * (1 - index / 36) : scale * index / 36;
     label.textContent = String(Math.round(reading));
   });
@@ -193,13 +189,12 @@ function setJitter(value) {
   $("jitter-result").innerHTML = `${Number.isFinite(value) ? formatLatency(value) : "—"}<small> ms</small>`;
 }
 
-function setSignalEstimate(value, source) {
+function setSignalEstimate(value) {
   setAuxGauge("signal", value);
-  $("signal-source").textContent = source;
 }
 
 function resetSignalEstimate() {
-  setSignalEstimate(browserDownlink, browserDownlink === null ? "LIVE DOWNLOAD ESTIMATE" : "BROWSER LINK ESTIMATE");
+  setSignalEstimate(browserDownlink);
 }
 function setPhase(phase, label) {
   $("phase-label").textContent = label;
@@ -358,8 +353,6 @@ async function measurePing(signal) {
 
 async function runDownload(signal) {
   setPhase("download", "MEASURING DOWNLOAD");
-  $("readout-label").textContent = "DOWNLOAD";
-  $("readout-caption").textContent = "RECEIVING LIVE DATA";
   let totalBytes = 0;
   let totalSeconds = 0;
   for (const [index, bytes] of DOWNLOAD_SIZES.entries()) {
@@ -368,7 +361,7 @@ async function runDownload(signal) {
       {},
       (liveSpeed) => {
         setGauge(liveSpeed, "download");
-        setSignalEstimate(liveSpeed, "LIVE DOWNLOAD · Mbps");
+        setSignalEstimate(liveSpeed);
       },
       signal,
     );
@@ -382,8 +375,6 @@ async function runDownload(signal) {
 
 async function runUpload(signal) {
   setPhase("upload", "MEASURING UPLOAD");
-  $("readout-label").textContent = "DOWNLOAD";
-  $("readout-caption").textContent = "UPLOAD ON RPM DIAL";
   let totalBytes = 0;
   let totalSeconds = 0;
   setAuxGauge("upload", null);
@@ -415,19 +406,16 @@ async function runTest() {
   currentController = controller;
   startButton.disabled = true;
   buttonLabel.textContent = "TESTING…";
-  $("readout-caption").textContent = "INITIALIZING TEST";
   $("engine-note").textContent = "REAL TRANSFER · CLOUDFLARE SPEED TEST";
   updateAuxScale("upload", AUX_DIAL_CONFIG.upload.initialMax);
   setAuxGauge("upload", null);
   setAuxGauge("ping", null);
-  setSignalEstimate(null, "AWAITING DOWNLOAD");
+  setSignalEstimate(null);
   setJitter(null);
   setGauge(0, "download");
   $("speed-value").innerHTML = `—<span> Mbps</span>`;
   try {
     setPhase("ping", "MEASURING LATENCY");
-    $("readout-label").textContent = "PING / JITTER";
-    $("readout-caption").textContent = "CHECKING ROUND-TRIP TIME";
     const { ping, jitter } = await measurePing(controller.signal);
     const download = await runDownload(controller.signal);
     const upload = await runUpload(controller.signal);
@@ -438,15 +426,12 @@ async function runTest() {
     currentController = null;
     startButton.disabled = false;
     buttonLabel.textContent = "RUN AGAIN";
-    $("readout-label").textContent = "TEST COMPLETE";
-    $("readout-caption").textContent = "MEASURED FROM THIS BROWSER";
     $("engine-note").textContent = "COMPLETE · LIVE TRANSFER RESULTS";
     setPhase("done", "TEST COMPLETE");
     return;
   } catch (error) {
     if (currentController !== controller) return;
     if (error.name === "AbortError") {
-      $("readout-caption").textContent = "TEST CANCELLED";
       setPhase("error", "TEST CANCELLED");
     } else {
       console.error("Speed test failed.", error);
@@ -454,7 +439,6 @@ async function runTest() {
       showToast(networkError
         ? "Could not reach the Cloudflare speed-test server. Check your connection or browser network permissions and retry."
         : error.message || "The speed test failed before it could complete. Please retry.");
-      $("readout-caption").textContent = "NO VERIFIED RESULT";
       $("engine-note").textContent = "FAILED · NO COMPLETE RESULTS SAVED";
       setPhase("error", "TEST FAILED");
     }
@@ -499,13 +483,11 @@ function resetTest() {
   currentController = null;
   startButton.disabled = false;
   buttonLabel.textContent = "START TEST";
-  $("readout-label").textContent = "DOWNLOAD";
-  $("readout-caption").textContent = "PRESS START TO BEGIN";
   $("engine-note").textContent = "REAL TRANSFER · CLOUDFLARE SPEED TEST";
   updateAuxScale("upload", AUX_DIAL_CONFIG.upload.initialMax);
   setAuxGauge("upload", null);
   setAuxGauge("ping", null);
-  setSignalEstimate(null, "AWAITING DOWNLOAD");
+  setSignalEstimate(null);
   setJitter(null);
   setGauge(0, "download");
   $("speed-value").innerHTML = `—<span> Mbps</span>`;

@@ -47,10 +47,10 @@ h1, h2, h3, p { margin-top: 0; }
 h1 { max-width: 320px; margin-bottom: 19px; font: 500 clamp(39px, 5vw, 58px)/.99 "Space Grotesk", sans-serif; letter-spacing: -.055em; }
 h1 em { color: var(--green); font-style: normal; }
 .intro-copy { max-width: 305px; color: #89938d; font-size: 13px; line-height: 1.85; }
-.cockpit { padding: 16px 30px 19px; border: 1px solid rgba(215,229,219,.13); border-radius: 5px; background:
+.cockpit { padding: 16px 30px 19px; border: 1px solid rgba(215,229,219,.16); border-radius: 8% 8% 5% 5% / 6% 6% 4% 4%; background:
   linear-gradient(135deg, rgba(255,255,255,.025), transparent 38%),
   repeating-linear-gradient(135deg,rgba(255,255,255,.012) 0 1px,transparent 1px 4px),
-  linear-gradient(160deg,#141b17,#0b0f0d 62%); box-shadow: 0 22px 70px rgba(0,0,0,.4), inset 0 1px rgba(255,255,255,.035); }
+  linear-gradient(160deg,#181d1a,#0b0f0d 62%); box-shadow: 0 22px 70px rgba(0,0,0,.4), inset 0 0 0 5px rgba(202,214,204,.025), inset 0 1px rgba(255,255,255,.055); }
 .cockpit-top { display: flex; justify-content: space-between; align-items: center; color: #839087; font: 600 8px Inter,sans-serif; letter-spacing: .16em; }
 .test-state, .server-chip { display: flex; align-items: center; gap: 8px; }
 .state-dot { width: 5px; height: 5px; }
@@ -78,18 +78,14 @@ h1 em { color: var(--green); font-style: normal; }
 .needle-hub-outer { fill: #252b26; stroke: #929990; stroke-width: 1.2; }
 .needle-hub { fill: #c4ccc6; stroke: #404842; stroke-width: 1; filter: drop-shadow(0 0 4px rgba(220,230,220,.45)); }
 .readout { position: absolute; top: 68%; left: 0; width: 100%; text-align: center; pointer-events: none; }
-.readout-kicker { color: #94a097; font: 600 8px Inter,sans-serif; letter-spacing: .2em; }
 .readout-number { margin: 2px 0 0; color: #f2f5ef; font: 600 clamp(26px, 3.2vw, 38px)/1 "Barlow Condensed",sans-serif; letter-spacing: -.035em; text-shadow: 0 0 24px rgba(190,222,193,.08); font-variant-numeric: tabular-nums; }
 .readout-number span { color: #8c9890; font: 500 9px Inter,sans-serif; letter-spacing: .04em; }
-.readout-caption { margin-top: 4px; color: #78857b; font: 600 6px Inter,sans-serif; letter-spacing: .12em; }
 .aux-gauge { --dial-accent: #ef463d; --dial-glow: rgba(239,70,61,.38); position: relative; width: 100%; min-width: 0; aspect-ratio: 1; padding: 0; text-align: center; }
 .rpm-gauge { grid-area: rpm; }
 .fuel-gauge { --dial-accent: #e8473f; --dial-glow: rgba(232,71,63,.32); }
 .temp-gauge { --dial-accent: #46cfe2; --dial-glow: rgba(70,207,226,.34); }
 .fuel-gauge { grid-area: fuel; width: 48%; }
 .temp-gauge { grid-area: temp; width: 48%; }
-.aux-heading { position: absolute; z-index: 1; top: 83%; left: 3%; right: 3%; display: flex; justify-content: center; gap: 3px; margin: 0; overflow: hidden; color: #c4cdc5; font: 700 clamp(5px, .55vw, 7px) Inter,sans-serif; letter-spacing: .08em; white-space: nowrap; }
-.aux-heading span:last-child { display: none; }
 .aux-dial { position: absolute; inset: 0; display: block; width: 100%; height: 100%; margin: 0; overflow: visible; }
 .dial-case { fill: #090b0a; stroke: #555b56; stroke-width: 2; filter: drop-shadow(0 2px 3px rgba(0,0,0,.8)); }
 .dial-bezel { fill: #111512; stroke: #242a25; stroke-width: 5; }
@@ -107,7 +103,6 @@ h1 em { color: var(--green); font-style: normal; }
 .dial-hub { fill: #e7ece7; }
 .aux-value { position: absolute; top: 65%; left: 0; width: 100%; margin: 0; color: #edf2ed; font: 600 clamp(8px, 1.35vw, 17px)/1 "Barlow Condensed",sans-serif; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .aux-value span { color: #89958b; font: 500 clamp(5px, .62vw, 8px) Inter,sans-serif; }
-.aux-foot { position: absolute; top: 75%; left: 3%; right: 3%; overflow: hidden; margin: 0; color: #68746c; font: 600 clamp(4px, .47vw, 6px) Inter,sans-serif; letter-spacing: .1em; white-space: nowrap; }
 .jitter-readout { grid-area: jitter; width: 100%; display: flex; justify-content: center; align-items: center; gap: 8px; min-height: 20px; border-top: 1px solid rgba(215,229,219,.07); color: #728078; font: 600 7px Inter,sans-serif; letter-spacing: .12em; }
 .jitter-readout strong { color: #dce5dc; font: 600 12px "Barlow Condensed",sans-serif; letter-spacing: 0; }
 .jitter-readout small { color: #89958b; font: 500 7px Inter,sans-serif; }
@@ -183,9 +178,7 @@ h3 { margin: 0; color: #d4ddd5; font: 600 11px "Space Grotesk",sans-serif; }
   .cockpit-top { font-size: 7px; }
   .server-chip { padding: 6px; gap: 5px; }
   .readout { top: 68%; }
-  .readout-kicker { font-size: 6px; }
   .readout-number { font-size: clamp(16px, 5.5vw, 22px); }
-  .readout-caption { margin-top: 2px; font-size: 4px; }
   .phase-progress { margin-bottom: 14px; font-size: 7px; letter-spacing: .08em; }
   .step-rail { margin: 0 5px; min-width: 8px; }
   .phase-step { gap: 4px; }
