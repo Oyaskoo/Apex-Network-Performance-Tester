@@ -47,31 +47,30 @@ h1, h2, h3, p { margin-top: 0; }
 h1 { max-width: 320px; margin-bottom: 19px; font: 500 clamp(39px, 5vw, 58px)/.99 "Space Grotesk", sans-serif; letter-spacing: -.055em; }
 h1 em { color: var(--green); font-style: normal; }
 .intro-copy { max-width: 305px; color: #89938d; font-size: 13px; line-height: 1.85; }
-.cockpit { padding: 16px 24px 19px; border: 1px solid rgba(215,229,219,.16); border-radius: 10% 10% 6% 6% / 9% 9% 7% 7%; background:
+.test-console { min-width: 0; }
+.cockpit { padding: 16px 24px 13px; border: 1px solid rgba(215,229,219,.16); border-radius: 10% 10% 6% 6% / 9% 9% 7% 7%; background:
   linear-gradient(135deg, rgba(255,255,255,.025), transparent 38%),
   repeating-linear-gradient(135deg,rgba(255,255,255,.012) 0 1px,transparent 1px 4px),
   linear-gradient(160deg,#181d1a,#0b0f0d 62%); box-shadow: 0 22px 70px rgba(0,0,0,.4), inset 0 0 0 5px rgba(202,214,204,.025), inset 0 1px rgba(255,255,255,.055); }
 .cockpit-top { display: flex; justify-content: space-between; align-items: center; color: #839087; font: 600 8px Inter,sans-serif; letter-spacing: .16em; }
-.test-state, .server-chip { display: flex; align-items: center; gap: 8px; }
+.test-state { display: flex; align-items: center; gap: 8px; }
 .state-dot { width: 5px; height: 5px; }
-.server-chip { padding: 7px 9px; border: 1px solid rgba(212,228,215,.08); color: #79867d; letter-spacing: .1em; }
-.tiny-crosshair { color: var(--green); font-size: 13px; }
 .live-indicator { display: none; align-items: center; gap: 5px; color: var(--green); font: 700 7px Inter,sans-serif; letter-spacing: .13em; }
 .live-indicator i { width: 5px; height: 5px; border-radius: 50%; background: currentColor; box-shadow: 0 0 8px currentColor; animation: pulse 1s infinite; }
 .cockpit.is-running .live-indicator { display: inline-flex; }
 .instrument-cluster { display: grid; grid-template-columns: 19.4% 29.1% 29.1% 19.4%; grid-template-areas: "fuel speed rpm temp"; align-items: center; justify-items: center; column-gap: 1%; margin: 15px 0 0; }
-.gauge-cell { position: relative; width: 100%; min-width: 0; aspect-ratio: 1; }
+.gauge-cell { display: flex; flex-direction: column; align-items: center; width: 100%; min-width: 0; }
 .ping-cell { grid-area: fuel; }
 .download-cell { grid-area: speed; }
 .upload-cell { grid-area: rpm; }
 .signal-cell { grid-area: temp; }
-.gauge-caption { position: absolute; top: calc(100% + 5px); left: -12%; right: -12%; display: flex; flex-direction: column; align-items: center; gap: 2px; color: #8d9990; text-align: center; pointer-events: none; }
+.gauge-caption { display: flex; flex-direction: column; align-items: center; gap: 2px; margin-top: 6px; color: #8d9990; text-align: center; pointer-events: none; }
 .measurement-name { color: #c5cec7; font: 600 clamp(6px, .7vw, 8px)/1.1 "Space Grotesk",Inter,sans-serif; letter-spacing: .12em; white-space: nowrap; }
 .measurement-unit { color: #768178; font: 500 clamp(5px, .58vw, 7px)/1.1 Inter,sans-serif; letter-spacing: .04em; white-space: nowrap; }
 .gauge-cell.is-active .measurement-name { color: var(--green); }
 .gauge-cell.is-active > .gauge-wrap > .gauge,
 .gauge-cell.is-active > .aux-gauge > .aux-dial { filter: drop-shadow(0 0 4px rgba(180,237,100,.46)); }
-.gauge-wrap { grid-area: speed; position: relative; width: 100%; max-width: none; aspect-ratio: 1; height: auto; margin: 0 auto; }
+.gauge-wrap { grid-area: speed; position: relative; flex: 0 0 auto; width: 100%; max-width: none; aspect-ratio: 1; height: auto; margin: 0 auto; }
 .gauge-halo { position: absolute; width: 65%; height: 36%; left: 17.5%; bottom: 9%; border-radius: 50%; background: rgba(110,174,88,.08); filter: blur(34px); }
 .gauge { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
 .gauge-track, .gauge-progress { fill: none; stroke-linecap: round; }
@@ -91,7 +90,7 @@ h1 em { color: var(--green); font-style: normal; }
 .needle-hub-shadow { fill: rgba(0,0,0,.72); }
 .needle-hub-outer { fill: #252b26; stroke: #929990; stroke-width: 1.2; }
 .needle-hub { fill: #c4ccc6; stroke: #404842; stroke-width: 1; filter: drop-shadow(0 0 4px rgba(220,230,220,.45)); }
-.aux-gauge { --dial-accent: #ef463d; --dial-glow: rgba(239,70,61,.38); position: relative; width: 100%; min-width: 0; aspect-ratio: 1; padding: 0; text-align: center; }
+.aux-gauge { --dial-accent: #ef463d; --dial-glow: rgba(239,70,61,.38); position: relative; flex: 0 0 auto; width: 100%; min-width: 0; aspect-ratio: 1; padding: 0; text-align: center; }
 .rpm-gauge { grid-area: rpm; }
 .fuel-gauge { --dial-accent: #e8473f; --dial-glow: rgba(232,71,63,.32); }
 .temp-gauge { --dial-accent: #46cfe2; --dial-glow: rgba(70,207,226,.34); }
@@ -130,17 +129,19 @@ h1 em { color: var(--green); font-style: normal; }
 .digital-unit { align-self: flex-end; padding-bottom: 2%; color: #91b69d; font: 600 clamp(3px, .48vw, 6px)/1 Inter,sans-serif; letter-spacing: .02em; }
 .aux-value { position: absolute; top: 69%; left: 0; width: 100%; margin: 0; color: #edf2ed; font: 600 clamp(5px, .7vw, 9px)/1 "Barlow Condensed",sans-serif; font-variant-numeric: tabular-nums; white-space: nowrap; text-shadow: 0 0 4px rgba(190,222,193,.2); }
 .aux-value span { color: #89958b; font: 500 clamp(3px, .42vw, 5px) Inter,sans-serif; }
-.jitter-readout { width: 100%; display: flex; justify-content: center; align-items: center; gap: 8px; min-height: 20px; margin-top: 12px; border-top: 1px solid rgba(215,229,219,.07); color: #728078; font: 600 7px Inter,sans-serif; letter-spacing: .12em; }
+.test-controls { display: grid; gap: 15px; margin: 17px 0 0; }
+.test-readouts { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); align-items: center; gap: 14px; }
+.jitter-readout { width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 8px; min-height: 34px; margin: 0; padding: 0 11px; border: 1px solid rgba(215,229,219,.09); background: rgba(8,12,10,.32); color: #728078; font: 600 7px Inter,sans-serif; letter-spacing: .12em; }
 .jitter-readout strong { color: #dce5dc; font: 600 12px "Barlow Condensed",sans-serif; letter-spacing: 0; }
 .jitter-readout small { color: #89958b; font: 500 7px Inter,sans-serif; }
-.phase-progress { width: min(330px, 95%); display: flex; margin: 0 auto 17px; align-items: center; justify-content: center; color: #68746c; font: 600 8px Inter,sans-serif; letter-spacing: .13em; }
+.phase-progress { width: 100%; min-width: 0; display: flex; margin: 0; align-items: center; justify-content: center; color: #68746c; font: 600 8px Inter,sans-serif; letter-spacing: .13em; }
 .phase-step { display: flex; gap: 6px; align-items: center; white-space: nowrap; transition: color .2s ease; }
 .phase-step.active { color: var(--green); }
 .phase-step.complete { color: #d4dfd4; }
 .step-index { color: #48534b; font: 600 8px "Space Grotesk",sans-serif; }
 .phase-step.active .step-index { color: var(--green); }
 .step-rail { flex: 1; min-width: 16px; height: 1px; margin: 0 9px; background: rgba(204,219,207,.15); }
-.action-row { display: flex; align-items: center; justify-content: center; gap: 12px; }
+.action-row { display: flex; align-items: center; justify-content: center; gap: 14px; }
 .start-button { position: relative; width: 205px; height: 48px; display: flex; align-items: center; justify-content: center; gap: 13px; border: 1px solid #c5f47e; border-radius: 3px; background: linear-gradient(110deg,#c1f67b,#9bda59); color: #14200f; box-shadow: 0 0 24px rgba(157,219,87,.13), inset 0 1px rgba(255,255,255,.55); cursor: pointer; font: 700 10px Inter,sans-serif; letter-spacing: .16em; transition: transform .18s ease, box-shadow .2s ease, filter .2s ease; }
 .start-button:hover { transform: translateY(-2px); box-shadow: 0 6px 25px rgba(157,219,87,.24); }
 .start-button:active { transform: translateY(0); }
@@ -150,7 +151,10 @@ h1 em { color: var(--green); font-style: normal; }
 .button-arrow { position: absolute; right: 12px; font-size: 13px; opacity: .6; }
 .reset-button { width: 38px; height: 38px; border: 1px solid rgba(218,232,220,.16); border-radius: 3px; background: rgba(255,255,255,.025); color: #9aa79d; cursor: pointer; font-size: 20px; transition: color .2s,border-color .2s,transform .3s; }
 .reset-button:hover { color: var(--green); border-color: var(--green-dim); transform: rotate(-45deg); }
-.engine-note { margin: 13px 0 0; color: #536057; text-align: center; font: 600 7px Inter,sans-serif; letter-spacing: .18em; }
+.test-footer { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 10px 24px; padding-top: 11px; border-top: 1px solid rgba(215,229,219,.07); }
+.test-footer-item { display: flex; align-items: baseline; gap: 7px; color: #536057; font: 600 7px Inter,sans-serif; letter-spacing: .13em; }
+.test-footer-item strong { color: #839087; font: inherit; letter-spacing: .04em; }
+.test-footer-item:last-child strong { color: #66756a; }
 .section-heading { display: flex; justify-content: space-between; align-items: end; margin-bottom: 19px; }
 .section-heading .eyebrow { margin-bottom: 9px; }
 h2 { margin: 0; font: 500 23px "Space Grotesk",sans-serif; letter-spacing: -.045em; }
@@ -190,7 +194,8 @@ h3 { margin: 0; color: #d4ddd5; font: 600 11px "Space Grotesk",sans-serif; }
   .intro .eyebrow { justify-content: center; }
   h1 { max-width: none; margin-bottom: 12px; font-size: 47px; }
   .intro-copy { max-width: 480px; margin: 0 auto; }
-  .cockpit { width: min(100%, 720px); min-width: 0; margin: 0 auto; }
+  .test-console { width: min(100%, 720px); margin: 0 auto; }
+  .cockpit { width: 100%; min-width: 0; }
 }
 @media (max-width: 520px) {
   .shell { width: calc(100% - 28px); }
@@ -201,23 +206,26 @@ h3 { margin: 0; color: #d4ddd5; font: 600 11px "Space Grotesk",sans-serif; }
   .hero { padding: 35px 0 37px; gap: 18px; }
   h1 { font-size: 39px; }
   .intro-copy { max-width: 330px; font-size: 11px; }
-  .cockpit { padding: 13px 10px 17px; }
+  .cockpit { padding: 13px 10px 11px; }
   .cockpit-top { font-size: 7px; }
-  .server-chip { padding: 6px; gap: 5px; }
   .instrument-cluster { column-gap: .5%; margin-top: 12px; }
   .digital-display { gap: 3%; }
   .digital-digits { font-size: clamp(4px, 1.65vw, 6px); }
   .digital-unit { font-size: clamp(3px, 1.15vw, 4px); }
   .aux-value { font-size: clamp(4px, 1.6vw, 6px); }
   .aux-value span { font-size: clamp(3px, 1.1vw, 4px); }
-  .gauge-caption { top: calc(100% + 4px); gap: 1px; }
+  .gauge-caption { margin-top: 4px; gap: 1px; }
   .measurement-name { font-size: clamp(5px, 1.75vw, 7px); letter-spacing: .08em; }
   .measurement-unit { font-size: clamp(4px, 1.4vw, 6px); }
-  .jitter-readout { margin-top: 9px; }
-  .phase-progress { margin-bottom: 14px; font-size: 7px; letter-spacing: .08em; }
+  .test-controls { gap: 13px; margin-top: 13px; }
+  .test-readouts { grid-template-columns: 1fr; gap: 11px; }
+  .phase-progress { font-size: 7px; letter-spacing: .08em; }
+  .jitter-readout { justify-self: center; width: min(100%, 230px); }
   .step-rail { margin: 0 5px; min-width: 8px; }
   .phase-step { gap: 4px; }
   .start-button { width: 190px; height: 45px; }
+  .test-footer { gap: 8px 14px; padding-top: 9px; }
+  .test-footer-item { font-size: 6px; }
   .section-heading { align-items: end; }
   h2 { font-size: 20px; }
   .unit-note { font-size: 7px; }

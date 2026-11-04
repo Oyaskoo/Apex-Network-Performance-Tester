@@ -30,17 +30,17 @@
           <p class="intro-copy">A real-time read on your connection. No estimates, no simulated numbers — just your network at full throttle.</p>
         </div>
 
-        <section class="cockpit" id="cockpit" aria-label="Live speed test">
-          <div class="cockpit-top">
-            <div class="test-state">
-              <span class="state-dot" id="phase-dot"></span>
-              <span id="phase-label">READY FOR IGNITION</span>
+        <div class="test-console">
+          <section class="cockpit" id="cockpit" aria-label="Live speed test">
+            <div class="cockpit-top">
+              <div class="test-state">
+                <span class="state-dot" id="phase-dot"></span>
+                <span id="phase-label">READY FOR IGNITION</span>
+              </div>
+              <span class="live-indicator" id="live-indicator" aria-hidden="true"><i></i> LIVE</span>
             </div>
-            <span class="live-indicator" id="live-indicator" aria-hidden="true"><i></i> LIVE</span>
-            <div class="server-chip"><span class="tiny-crosshair">⌖</span><span id="server-short">CLOUDFLARE NETWORK</span></div>
-          </div>
 
-          <div class="instrument-cluster" aria-label="Four live automotive-style network gauges">
+            <div class="instrument-cluster" aria-label="Four live automotive-style network gauges">
           <div class="gauge-cell small-cell ping-cell" data-measurement="ping">
           <div class="aux-gauge fuel-gauge" data-gauge="ping">
             <svg class="aux-dial" viewBox="0 0 160 160" role="img" aria-label="Ping latency fuel gauge, E is poor and F is excellent">
@@ -129,26 +129,35 @@
           </div>
             <div class="gauge-caption" id="signal-caption" title="Signal strength is not exposed by most browsers; this is a link-rate estimate."><span class="measurement-name">SIGNAL</span><span class="measurement-unit" id="signal-unit">Mbps est.</span></div>
           </div>
-          <div class="jitter-readout"><span>NETWORK JITTER</span><strong id="jitter-result">—<small> ms</small></strong></div>
+          </section>
 
-          <div class="phase-progress" aria-label="Test progress">
-            <div class="phase-step active" id="step-ping"><span class="step-index">01</span><span>PING</span></div>
-            <span class="step-rail"></span>
-            <div class="phase-step" id="step-download"><span class="step-index">02</span><span>DOWNLOAD</span></div>
-            <span class="step-rail"></span>
-            <div class="phase-step" id="step-upload"><span class="step-index">03</span><span>UPLOAD</span></div>
-          </div>
+          <section class="test-controls" aria-label="Speed test controls and status">
+            <div class="action-row">
+              <button type="button" class="start-button" id="start-button">
+                <span class="button-icon" aria-hidden="true"><span></span></span>
+                <span id="button-label">START TEST</span>
+                <span class="button-arrow" aria-hidden="true">↗</span>
+              </button>
+              <button type="button" class="reset-button" id="reset-button" aria-label="Reset test" title="Reset test">↻</button>
+            </div>
 
-          <div class="action-row">
-            <button type="button" class="start-button" id="start-button">
-              <span class="button-icon" aria-hidden="true"><span></span></span>
-              <span id="button-label">START TEST</span>
-              <span class="button-arrow" aria-hidden="true">↗</span>
-            </button>
-            <button type="button" class="reset-button" id="reset-button" aria-label="Reset test" title="Reset test">↻</button>
-          </div>
-          <p class="engine-note" id="engine-note">REAL TRANSFER · CLOUDFLARE SPEED TEST</p>
-        </section>
+            <div class="test-readouts">
+              <div class="phase-progress" aria-label="Test progress">
+                <div class="phase-step active" id="step-ping"><span class="step-index">01</span><span>PING</span></div>
+                <span class="step-rail"></span>
+                <div class="phase-step" id="step-download"><span class="step-index">02</span><span>DOWNLOAD</span></div>
+                <span class="step-rail"></span>
+                <div class="phase-step" id="step-upload"><span class="step-index">03</span><span>UPLOAD</span></div>
+              </div>
+              <div class="jitter-readout"><span>NETWORK JITTER</span><strong id="jitter-result">—<small> ms</small></strong></div>
+            </div>
+
+            <footer class="test-footer">
+              <div class="test-footer-item"><span>TEST SERVER</span><strong id="server-short">CLOUDFLARE NETWORK</strong></div>
+              <div class="test-footer-item"><span>TRANSFER</span><strong id="engine-note">REAL DATA TRANSFER</strong></div>
+            </footer>
+          </section>
+        </div>
       </section>
 
       <section class="details-grid">

@@ -527,7 +527,23 @@ function providerName(value) {
   if (typeof value === "string" && value.trim()) return value.trim();
   if (typeof value === "number" && Number.isFinite(value)) return String(value);
   if (!value || typeof value !== "object") return "";
-  for (const key of ["name", "organization", "org", "provider", "isp", "displayName", "asOrganization"]) {
+  for (const key of [
+    "name",
+    "displayName",
+    "display_name",
+    "organization",
+    "organizationName",
+    "org",
+    "orgName",
+    "provider",
+    "isp",
+    "asOrganization",
+    "colo",
+    "city",
+    "code",
+    "iata",
+    "id",
+  ]) {
     const name = providerName(value[key]);
     if (name) return name;
   }
@@ -547,11 +563,12 @@ async function loadNetworkInfo() {
     if (!response.ok) throw new Error(`Network metadata request returned HTTP ${response.status}.`);
     const metadata = await response.json();
     $("isp-value").textContent = providerName(metadata.asOrganization) || providerName(metadata.isp) || providerName(metadata.asn) || "Unavailable";
-    $("ip-value").textContent = metadata.clientIp || "Unavailable";
-    const location = [metadata.city, metadata.region, metadata.country].filter(Boolean).join(", ");
+    $("ip-value").textContent = providerName(metadata.clientIp) || "Unavailable";
+    const location = [metadata.city, metadata.region, metadata.country].map(providerName).filter(Boolean).join(", ");
     $("location-value").textContent = location || "Unavailable";
-    $("edge-value").textContent = metadata.colo || "Cloudflare edge";
-    $("server-short").textContent = metadata.colo ? `CLOUDFLARE · ${metadata.colo}` : "CLOUDFLARE NETWORK";
+    const edge = providerName(metadata.colo);
+    $("edge-value").textContent = edge || "Cloudflare edge";
+    $("server-short").textContent = edge ? `CLOUDFLARE · ${edge}` : "CLOUDFLARE NETWORK";
   } catch (error) {
     console.warn("Network metadata is unavailable.", error);
     $("isp-value").textContent = "Unavailable";
